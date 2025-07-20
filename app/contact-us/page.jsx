@@ -1,6 +1,6 @@
 import React from 'react'
 import Layout from '../components/Layout'
-import Breadcumbs from '../components/breadcumbs/breadcumbs'
+import Breadcumbs from '../components/breadcumbs/Breadcumbs'
 
 const page = () => {
   return (
