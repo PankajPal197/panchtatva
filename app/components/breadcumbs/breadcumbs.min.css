@@ -1,0 +1,16 @@
+.breadcumbs{
+    background-color: #e5e3e3;
+}
+.breadcumbs .breadcumbs-inner ul li{
+   text-transform: lowercase;
+}
+.breadcumbs .breadcumbs-inner ul li a{
+    text-decoration: none;
+    color: gray;
+}
+.breadcumbs .breadcumbs-inner ul li a::after{
+    content: ">>";
+    color: grey;
+    margin-left:1rem;
+}
+.breadcumbs .breadcumbs-inner ul li a:hover{color: black;}

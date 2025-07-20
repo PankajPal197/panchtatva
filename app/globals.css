@@ -1,26 +1,178 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@import "slick-carousel/slick/slick.css";
+/* @import "slick-carousel/slick/slick-theme.css"; */
+:root{
+    --base-color:#92403c;
+    --secondary-color: #f36c69;
+    --white-color:#ffffff;
+    --primary-color:#000000;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.p-tb-60{
+    padding: 1px 60px;
+}
+/* header  */
+.header{
+    background-color:var(--base-color) ; 
+    width: 100%;
+    overflow: hidden;
+}
+.header ul li{
+    /* display: inline-block; */
+    vertical-align: top;
+    list-style: none;
+    float: left;
+    position: relative;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    /* margin: 0 8px; */
+}
+.header ul li a{
+    color: var(--white-color);
+    text-decoration: none;
+    display: block;
+    float: left;
+    font: 600 14px / 18px Open Sans, sans-serif;
+    overflow: hidden;
+    position: relative;
+    text-transform: capitalize;
+    z-index: 1;
+    transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    -moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -ms-transition: all .4s ease-in-out;
+    border-radius: 8px;
+    padding: 12px 5px;
+}
+.header ul li a::after{
+    background: #fff none repeat scroll 0 0;
+    content: "";
+    height: 100%;
+    left: 0;
+    opacity: .2;
+    -moz-opacity: 0.2;
+    -khtml-opacity: 0.2;
+    -webkit-opacity: 0.2;
+    position: absolute;
+    top: 0;
+    width: 0;
+    border-radius: 8px;
+    transition: .5s ease-in-out;
+}
+.header ul li a:hover::after{
+    width: 100%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.header ul li:hover>a{
+   background-color: var(--secondary-color);    
+    color: var(--white-color);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* footer  */
+.footer{
+    /* position: absolute; */
+    background-color: var(--primary-color);
+    width: 100%;
+    color: var(--white-color);
+    bottom: 0;
+}
+
+/* button  */
+                                                                                                                            utton button{
+    border-radius: 25px;
+    background: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+.button .icons{
+    position: absolute;
+    left: 50%;
+    top: 75%;
+    background: white;
+    color: black;
+    border-radius: 50%;
+}
+.button button:hover{
+width: 140px;
+transition-duration: 0.8s;
+opacity: 0.9;
+}
+
+/* topbar  */
+.topbar{
+    background-color: var(--secondary-color);
+    width: 100%;
+    padding: 80px 0 15px;
+}
+/* hero section  */
+.hero-section{
+    padding: 20px 0 0;
+}
+.topbar-btn{
+    background: #92403c;
+    padding: 10px 22px;
+    border-radius: 5px;
+}
+.search-btn{
+position: absolute;
+top:18%;
+left:56%;
+}
+.search-btn button{
+    font: 600 14px / 18px Roboto, Helvetica, sans-serif;
+    letter-spacing: 1px;
+    padding: 14px 20px;
+    margin: 3px 5px;
+    height: 44px;
+    text-transform: none;
+    float: left;
+    /* width: auto; */
+    border: none;
+    position: relative;
+    border-radius: 8px;
+    transition: .5s ease-in-out;
+}
+.search-btn button:hover{
+    background: #f36c69;
+    color: #fff;
+}
+
+/* offer handled  */
+.offer-heading{
+    background: white;
+    color: #000000;
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: 10px;
+    width: 250px;
+}
+
+
+.space-y-4{
+    display: flex;
+    flex-direction: column;
+    padding-left: 0 !important;
+}
+
+/* quality-meterial */
+.quality-meterial{
+    text-align: center;
+    margin: auto;
+}
+/* responsive */
+@media (max-width:992px){
+    .header .desktop{
+        display: none;
+    }
+}
+
+@media (max-width:767px){
+.p-tb-60{
+    padding:10px;
+}
+.quality-meterial{
+text-align: justify;
+}
 }

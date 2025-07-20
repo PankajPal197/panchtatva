@@ -1,0 +1,9 @@
+.product a{
+    color: red;
+    color: #92403c;
+    text-decoration: none;
+    font: 600 14px / 24px Open Sans, sans-serif;
+}
+.product ul{
+    padding-left: 0 !important;
+}
