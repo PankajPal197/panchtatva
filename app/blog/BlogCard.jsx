@@ -82,7 +82,7 @@ const BlogCard = () => {
         <h2 className='text-2xl font-bold mt-3'>Our Blog</h2>
       </div>
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 '>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6  blog'>
         {teamMembers.map((member) => (
         <Link href={`/blog/${member.id}`}>
           <div key={member.id} className="p-2">

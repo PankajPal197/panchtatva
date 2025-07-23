@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import { CiHeart } from "react-icons/ci";
+import { CiHeart, CiSearch } from "react-icons/ci";
 import { FaUserAlt } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
@@ -98,6 +98,31 @@ const menu = [
 const Navbar = () => {
   const [openDropdown, setOpenDropDown] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const[query, setQuery] = useState("");
+  const[results, setResults] = useState([]);
+
+  const handleSearch = async (e) => {
+    const searchTerm = e.target.value;
+    setQuery(searchTerm);
+    if (searchTerm.length > 1) {
+    const dummyProducts = [
+      { id: 1, name: "Red Shirt" },
+      { id: 2, name: "Blue Jeans" },
+      { id: 3, name: "Green Hat" },
+    ];
+    const filtered = dummyProducts.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setResults(filtered);
+  }
+  else{
+    setResults([]);
+  }
+  };
+
+  
+
   return (
     <>
       <header className="header fixed z-50">
@@ -161,6 +186,10 @@ const Navbar = () => {
               <Link href="/cart" title="cart" className="group">
                 <FaShoppingCart className="text-white text-2xl font-bold transition-transform group-hover:rotate-y-180  duration-500" />{" "}
               </Link>
+              <button onClick={() => setShowSearch(true)}>
+                <CiSearch type="button"  className="text-white text-2xl font-bold" />
+              </button>
+              {/* <CiSearch /> */}
             </div>
           </div>
         </div>
@@ -269,6 +298,30 @@ const Navbar = () => {
               </div>
             </div>
           </div>
+          {
+            showSearch && (
+              <div className="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded p-3 z-50">
+          <input
+            type="text"
+            value={query}
+            onChange={handleSearch}
+            placeholder="Search products..."
+            className="w-full p-2 border rounded mb-2"
+          />
+          {results.length > 0 ? (
+            <ul>
+              {results.map((item) => (
+                <li key={item.id} className="py-1 hover:text-blue-500 cursor-pointer">
+                  {item.name}
+                </li>
+              ))}
+            </ul>
+          ) : query.length > 1 ? (
+            <p className="text-sm text-gray-500">No results found.</p>
+          ) : null}
+        </div>
+            )
+          }
         </div>
       </header>
       <Topbar />

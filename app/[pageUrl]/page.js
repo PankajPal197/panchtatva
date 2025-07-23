@@ -66,7 +66,7 @@ const page = () => {
   return (
     <Layout>
       <Breadcumbs title={"Our Category"} pageUrl={"category"} />
-      <section className="mt-3 mb-3">
+      <section className="mt-3 mb-3 category">
         <div className="p-tb-60">
           <div className="row">
             <div className="col-md-3">
@@ -140,7 +140,7 @@ const page = () => {
                 </div>
               </div>
             </div>
-            <div className="col-md-9">
+            <div className="col-md-9 category-item">
               <div className="row">
                 {brand.map((item) => (
                   <div className="col-md-4 mt-3" key={item.id}>
