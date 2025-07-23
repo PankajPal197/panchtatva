@@ -66,22 +66,22 @@ const General_config_Schema = new mongoose.Schema(
     header_logo: {
       data: Buffer,
       contentType: String,
-      default: null,
+      // default: null,
     },
     footer_logo: {
       type: Buffer,
       contentType: String,
-      default: null,
+      // default: null,
     },
     fav_icon_logo: {
       type: Buffer,
       contentType: String,
-      default: null,
+      // default: null,
     },
     apple_icon_logo: {
       type: Buffer,
       contentType: String,
-      default: null,
+      // default: null,
     },
     state_name: {
       type: String,
