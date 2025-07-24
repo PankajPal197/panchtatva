@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import Link from "next/link";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import dynamic from "next/dynamic";
+
+const CKEditorClient = dynamic(() => import('../../components/CKEditorClient'), { ssr: false })
 
 const page = () => {
-  const [editorData, setEditorData] = useState("");
   return (
     <Layout>
       <section className="px-5 py-3">
@@ -241,15 +241,7 @@ const page = () => {
                 </div>
                 <div className="col-md-9">
                   <div className="ck-editor">
-                    <CKEditor
-                      editor={ClassicEditor}
-                      data={editorData}
-                      onChange={(event, editor) => {
-                        const data = editor.getData();
-                        setEditorData(data);
-                        console.log("Editor data:", data);
-                      }}
-                    />
+                    <CKEditorClient/>
                   </div>
                 </div>
               </div>
@@ -263,14 +255,7 @@ const page = () => {
                 </div>
                 <div className="col-md-9">
                   <div className="ck-editor">
-                    <CKEditor
-                      editor={ClassicEditor}
-                      data={editorData}
-                      onChange={(event, editor) => {
-                        const data = editor.getData();
-                        setEditorData(data);
-                      }}
-                    />
+                    <CKEditorClient/>
                   </div>
                 </div>
               </div>

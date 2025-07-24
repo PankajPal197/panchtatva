@@ -74,7 +74,7 @@ const page = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="p-3 border">₹{item.price.toFixed(2)}</td>
+                    <td className="p-3">₹{item.price.toFixed(2)}</td>
                     <td className="p-3 border"></td>
                     <td className="p-3 border">
                       

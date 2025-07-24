@@ -2,12 +2,9 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import Link from "next/link";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ProductDetail from "../../components/ProductDetail";
 
 const page = () => {
-  const [editorData, setEditorData] = useState("");
   return (
     <Layout>
       <section className="px-5 py-3">
