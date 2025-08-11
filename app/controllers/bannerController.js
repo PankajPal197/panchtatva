@@ -1,20 +1,22 @@
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
 import connectDB from "../utils/Database";
 import path from "path";
 import fs from "fs/promises";
 import Banner from "../Models/Banner";
 
-export const getBanner= async () => {
-    try{
-    await connectDB()
-    const data=await Banner.find({delete_status:'active'})
-    return NextResponse.json({success:true, data})
-    }
-    catch(err){
-    return NextResponse.json({success:false, message:err.message},{status:500})
-    }
-    
-}
+export const getBanner = async () => {
+  try {
+    await connectDB();
+    const data = await Banner.find({ delete_status: "active" });
+    return NextResponse.json({ success: true, data });
+  } catch (err) {
+    return NextResponse.json(
+      { success: false, message: err.message },
+      { status: 500 }
+    );
+  }
+};
+
 export const postBanner = async (req) => {
   try {
     await connectDB();
@@ -32,12 +34,7 @@ export const postBanner = async (req) => {
       const buffer = Buffer.from(await file.arrayBuffer());
       const ext = file.name.split(".").pop();
       const fileName = `${filenamePrefix}_${Date.now()}.${ext}`;
-      const uploadPath = path.join(
-        process.cwd(),
-        "public",
-        "banner",
-        fileName
-      );
+      const uploadPath = path.join(process.cwd(), "public", "banner", fileName);
 
       await fs.mkdir(path.dirname(uploadPath), { recursive: true });
       await fs.writeFile(uploadPath, buffer);
@@ -49,14 +46,19 @@ export const postBanner = async (req) => {
     // Save to disk
     const imagePath1 = await saveFile(ImageFile1, "image_name");
 
+    const parseNumber = (value, fallback = 0) => {
+      const num = Number(value);
+      return isNaN(num) ? fallback : num;
+    };
+
     const bannerData = await Banner.create({
       heading_1: getText("heading_1"),
       heading_2: getText("heading_2"),
       heading_3: getText("heading_3"),
-      sort_order: Number(getText("sort_order")),
+      sort_order: parseNumber(getText("sort_order"), 1),
       delete_status: getText("delete_status"),
       status: getText("status"),
-      delete_by: Number(getText("delete_by")),
+      delete_by: parseNumber(getText("delete_by"), 1),
       image_name: imagePath1,
     });
 
@@ -91,23 +93,18 @@ export const putBanner = async (req) => {
         { status: 400 }
       );
 
-     const getText = (key) => {
+    const getText = (key) => {
       const value = formData.get(key);
       return value === "" || value === null ? undefined : value;
     };
-    
+
     const saveFile = async (file, filenamePrefix) => {
       if (!file || typeof file.arrayBuffer !== "function") return null;
 
       const buffer = Buffer.from(await file.arrayBuffer());
       const ext = file.name.split(".").pop();
       const fileName = `${filenamePrefix}_${Date.now()}.${ext}`;
-      const uploadPath = path.join(
-        process.cwd(),
-        "public",
-        "banner",
-        fileName
-      );
+      const uploadPath = path.join(process.cwd(), "public", "banner", fileName);
 
       await fs.mkdir(path.dirname(uploadPath), { recursive: true });
       await fs.writeFile(uploadPath, buffer);
@@ -120,15 +117,19 @@ export const putBanner = async (req) => {
     // Save to disk
     const imagePath1 = await saveFile(ImageFile1, "image_name");
 
+    const parseNumber = (value, fallback = 0) => {
+      const num = Number(value);
+      return isNaN(num) ? fallback : num;
+    };
 
     const updateData = {
       heading_1: getText("heading_1"),
       heading_2: getText("heading_2"),
       heading_3: getText("heading_3"),
-      sort_order: Number(getText("sort_order")),
+      sort_order: parseNumber(getText("sort_order"), 1),
       delete_status: getText("delete_status"),
       status: getText("status"),
-      delete_by: Number(getText("delete_by")),
+      delete_by: parseNumber(getText("delete_by"), 1),
       image_name: imagePath1,
     };
 

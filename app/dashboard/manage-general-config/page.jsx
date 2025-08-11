@@ -3,10 +3,9 @@ import React from "react";
 import Layout from "../components/Layout";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchGeneralConfig,
-} from "@/app/store/slices/genralConfigSlice";
+import { fetchGeneralConfig } from "@/app/store/slices/genralConfigSlice";
 import Swal from "sweetalert2";
+import ManageGeneralConfig from "../components/ManageGenralConfig";
 
 const page = () => {
   const dispatch = useDispatch();
@@ -99,11 +98,41 @@ const page = () => {
       Swal.fire("Error", result.message, "error");
     }
   };
+  
+
+   useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("/api/general_config");
+      const json = await res.json();
+      if (json.success && json.data) {
+        const config = json.data;
+        setFormData((prev) => ({
+          ...prev,
+          ...config,
+        }));
+
+        // Set preview for existing images
+        ["header_logo", "footer_logo", "fav_icon_logo", "apple_icon_logo"].forEach((key) => {
+          if (config[key]) {
+            setImagePreviews((prev) => ({
+              ...prev,
+              [key]: `/general_config/${config[key]}`,
+            }));
+          }
+        });
+      }
+    };
+    fetchData();
+  }, []);
+
 
   return (
     <>
       <Layout>
-        <section className="px-20 py-10">
+
+
+        {/* <ManageGeneralConfig /> */}
+       <section className="p-3">
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <div className="flex items-center justify-between">
               <div className="text-2xl fw-bold text-gray-500 ">

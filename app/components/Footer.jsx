@@ -67,8 +67,13 @@ const Footer = () => {
                 <Link href={"/terms-and-conditions"}>Terms & Conditions</Link>
               </li>
               <li>
-                <Link href={"/cancellation-return and-refund-policy"}>
-                  Cancellation,Return & Refund Policy
+                <Link href={"/refund-policy"}>
+                  Return Policy
+                </Link>
+              </li>
+              <li>
+                <Link href={"/shipping-return"}>
+                  Shipping & Return
                 </Link>
               </li>
             </ul>

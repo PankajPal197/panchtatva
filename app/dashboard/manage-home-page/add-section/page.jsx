@@ -3,16 +3,127 @@ import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { createHomePage } from "@/app/store/slices/sectionSlice";
+import Swal from "sweetalert2";
 
-const CKEditorClient = dynamic(() => import('../../components/CKEditorClient'), { ssr: false })
-
+const CKEditorClient = dynamic(
+  () => import("../../components/CKEditorClient"),
+  { ssr: false }
+);
 const page = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    section_name: "",
+    m_id: "0",
+    heading_1: "",
+    status: "active",
+    heading_2: "",
+    heading_3: "",
+    short_content_1: "",
+    short_content_2: "",
+    long_content_1: "",
+    long_content_2: "",
+  });
+  const [images, setImages] = useState({
+    image_1: null,
+    image_1: null,
+  });
+
+  const handleEditorChange = (name, value) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "section_name") {
+      setFormData({
+        ...formData,
+        section_name: value,
+        // page_url: value.toLowerCase().replace(/\s+/g, "_"),
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    if (files && files.length > 0) {
+      setImages((prevImages) => ({
+        ...prevImages,
+        [name]: files[0],
+      }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.section_name) {
+      return Swal.fire("Error", "Category Name are required", "error");
+    }
+
+    const payload = new FormData();
+    payload.append("section_name", formData.section_name);
+    payload.append("m_id", formData.m_id);
+    payload.append("heading_1", formData.heading_1);
+    payload.append("heading_2", formData.heading_2);
+    payload.append("heading_3", formData.heading_3);
+    payload.append("short_content_1", formData.short_content_1);
+    payload.append("short_content_2", formData.short_content_2);
+    payload.append("image_1", images.image_1);
+    payload.append("image_1", images.image_2);
+    payload.append("long_content_1", formData.long_content_1);
+    payload.append("long_content_2", formData.long_content_2);
+    payload.append("status", formData.status);
+
+    try {
+      const result = await dispatch(createHomePage(payload));
+      if (result?.payload?.success) {
+        Swal.fire(
+          "Success!",
+          "Home Section created and saved successfully",
+          "success"
+        );
+        setFormData({
+          section_name: "",
+          m_id: "",
+          status: "active",
+          heading_1: "",
+          heading_2: "",
+          heading_3: "",
+          short_content_1: "",
+          short_content_2: "",
+          long_content_1: "",
+          long_content_2: "",
+        });
+        setImages({
+          image_1: null,
+          image_2: null,
+        });
+        router.push("/dashboard/manage-home-page");
+      } else {
+        Swal.fire("Error!", "Something went wrong", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error!", "Something went wrong", "error");
+    }
+  };
   return (
     <Layout>
-      <section className="px-5 py-3">
+      <section className="px-3">
         <div className="flex items-center justify-between">
           <div className="text-2xl fw-bold text-gray-500 ">
-                Add/Edit Section
+            Add/Edit Section
           </div>
           <div className="">
             <Link href="./" className="mr-3">
@@ -20,72 +131,120 @@ const page = () => {
                 Back
               </button>
             </Link>
-            <Link href="./add-section">
+            <Link href="./add-category">
               <button className="mt-3 px-4 py-2 bg-cyan-600 text-white font-bold rounded">
                 Reset
               </button>
             </Link>
           </div>
         </div>
-        <hr className="bg-red-500 w-100" />
+        <hr className="bg-red-500 w-full mt-2" />
       </section>
-      <section className="px-5 py-1">
-        <div className="form-title bg-blue-700 text-white text-md  font-medium px-3 py-2">
-          Categories Detail
+      <section className="px-3 mt-1">
+        <div className="form-title bg-blue-700 text-white text-md  font-medium p-3">
+          Section Detail
         </div>
-        <form className="mt-4">
-        <div className="row ">
-          <div className="col-md-6">
-            <div className="row items-center">
-              <div className="col-md-3">
-                <label>
-                  Section Name <span className="text-red-600">*</span>
-                </label>
-              </div>
-              <div className="col-md-9">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="category_name"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="row items-center">
-              <div className="col-md-3">
-                <label>
-                  Parent Category <span className="text-red-600">*</span>
-                </label>
-              </div>
-              <div className="col-md-9">
-                <select className="form-select" name="mcategory_id">
-                  <option value={0}>Root Category</option>
-                  <option value={1}>Service category</option>
-                  <option value={45}>office container</option>
-                  <option value={45}>office container</option>
-                  <option value={45}>office container</option>
-                  <option value={45}>office container</option>
-                  <option value={45}>office container</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-          <div className="row mt-3">
-            <div className="col-md-6">
+        <form
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+          className="mt-3"
+        >
+          <div className="row ">
+            <div className="col-md-6 mt-3">
               <div className="row items-center">
                 <div className="col-md-3">
                   <label>
-                    Page URL <span className="text-red-600">*</span>
+                    Section Name <span className="text-red-600">*</span>
                   </label>
                 </div>
                 <div className="col-md-9">
-                  <input type="text" className="form-control" name="page_url" />
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="section_name"
+                    value={formData.section_name}
+                    onChange={handleInputChange}
+                  />
                 </div>
               </div>
             </div>
-            <div className="col-md-6">
+            <div className="col-md-6 mt-3">
+              <div className="row items-center">
+                <div className="col-md-3">
+                  <label>
+                    Parent Category <span className="text-red-600">*</span>
+                  </label>
+                </div>
+                <div className="col-md-9">
+                  <select className="form-select" name="m_id">
+                    <option value="0" style={{ color: "red" }}>
+                      Root Category
+                    </option>
+                     <option value="1" style={{ color: "green" }}>
+                      Paula Mclean1
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6 mt-3">
+              <div className="row items-center">
+                <div className="col-md-3">
+                  <label>
+                    Heading 1 <span className="text-red-600">*</span>
+                  </label>
+                </div>
+                <div className="col-md-9">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="heading_1"
+                    value={formData.heading_1}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6 mt-3">
+              <div className="row items-center">
+                <div className="col-md-3">
+                  <label>
+                    Heading 2 <span className="text-red-600">*</span>
+                  </label>
+                </div>
+                <div className="col-md-9">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="heading_2"
+                    value={formData.heading_2}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6 mt-3">
+              <div className="row items-center">
+                <div className="col-md-3">
+                  <label>
+                    Heading 3 <span className="text-red-600">*</span>
+                  </label>
+                </div>
+                <div className="col-md-9">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="heading_3"
+                    value={formData.heading_3}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6 mt-3">
               <div className="row items-center">
                 <div className="col-md-3">
                   <label>
@@ -93,111 +252,19 @@ const page = () => {
                   </label>
                 </div>
                 <div className="col-md-9">
-                  <select className="form-select" name="status">
+                  <select
+                    className="form-select"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleInputChange}
+                  >
                     <option value="active">Active</option>
                     <option value="inactive">In-Active</option>
                   </select>
                 </div>
               </div>
             </div>
-            <div className="col-md-6 mt-3">
-              <div className="row items-center">
-                <div className="col-md-3">
-                  <label>
-                    Extra Heading <span className="text-red-600">*</span>
-                  </label>
-                </div>
-                <div className="col-md-9">
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="extra_heading_1"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 mt-3">
-              <div className="row items-center">
-                <div className="col-md-3">
-                  <label>
-                    Extra Heading 2 <span className="text-red-600">*</span>
-                  </label>
-                </div>
-                <div className="col-md-9">
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="extra_heading_2"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 mt-3">
-              <div className="row items-center">
-                <div className="col-md-3">
-                  <label>
-                    Seo Title <span className="text-red-600">*</span>
-                  </label>
-                </div>
-                <div className="col-md-9">
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="seo_title"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 mt-3">
-              <div className="row items-center">
-                <div className="col-md-3">
-                  <label>
-                    Extra Heading 3 <span className="text-red-600">*</span>
-                  </label>
-                </div>
-                <div className="col-md-9">
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="extra_heading_3"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 mt-3">
-              <div className="row items-center">
-                <div className="col-md-3">
-                  <label>
-                    SEO Description<span className="text-red-600">*</span>
-                  </label>
-                </div>
-                <div className="col-md-9">
-                  <textarea
-                    cols={3}
-                    rows={3}
-                    className="form-control"
-                    name="extra_heading_2"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 mt-3">
-              <div className="row items-center">
-                <div className="col-md-3">
-                  <label>
-                    SEO Keywords<span className="text-red-600">*</span>
-                  </label>
-                </div>
-                <div className="col-md-9">
-                  <textarea
-                    cols={3}
-                    rows={3}
-                    className="form-control"
-                    name="seo_keywords"
-                  />
-                </div>
-              </div>
-            </div>
+
             <div className="col-md-6 mt-3">
               <div className="row items-center">
                 <div className="col-md-3">
@@ -210,7 +277,9 @@ const page = () => {
                     cols={3}
                     rows={3}
                     className="form-control"
-                    name="short_desc_1"
+                    name="short_content_1"
+                    value={formData.short_content_1}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
@@ -227,7 +296,9 @@ const page = () => {
                     cols={3}
                     rows={3}
                     className="form-control"
-                    name="short_desc_2"
+                    name="short_content_2"
+                    value={formData.short_content_2}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
@@ -241,7 +312,11 @@ const page = () => {
                 </div>
                 <div className="col-md-9">
                   <div className="ck-editor">
-                    <CKEditorClient/>
+                    <CKEditorClient
+                      name="long_content_1"
+                      value={formData.long_content_1}
+                      onChange={handleEditorChange}
+                    />
                   </div>
                 </div>
               </div>
@@ -255,7 +330,11 @@ const page = () => {
                 </div>
                 <div className="col-md-9">
                   <div className="ck-editor">
-                    <CKEditorClient/>
+                    <CKEditorClient
+                      name="long_content_2"
+                      value={formData.long_content_2}
+                      onChange={handleEditorChange}
+                    />
                   </div>
                 </div>
               </div>
@@ -264,14 +343,16 @@ const page = () => {
               <div className="row items-center">
                 <div className="col-md-3">
                   <label>
-                    Category Image 1 <span className="text-red-600">*</span>
+                    Section Image 1 <span className="text-red-600">*</span>
                   </label>
                 </div>
                 <div className="col-md-9">
                   <input
                     type="file"
                     className="form-control"
-                    name="image_name_1"
+                    name="image_1"
+                    onChange={handleFileChange}
+                    accept="image/*"
                   />
                 </div>
               </div>
@@ -280,46 +361,16 @@ const page = () => {
               <div className="row items-center">
                 <div className="col-md-3">
                   <label>
-                    Category Image 2 <span className="text-red-600">*</span>
+                    Section Image 2 <span className="text-red-600">*</span>
                   </label>
                 </div>
                 <div className="col-md-9">
                   <input
                     type="file"
                     className="form-control"
-                    name="image_name_2"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 mt-3">
-              <div className="row items-center">
-                <div className="col-md-3">
-                  <label>
-                    Category Image 3 <span className="text-red-600">*</span>
-                  </label>
-                </div>
-                <div className="col-md-9">
-                  <input
-                    type="file"
-                    className="form-control"
-                    name="image_name_3"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 mt-3">
-              <div className="row items-center">
-                <div className="col-md-3">
-                  <label>
-                    Category Image 4 <span className="text-red-600">*</span>
-                  </label>
-                </div>
-                <div className="col-md-9">
-                  <input
-                    type="file"
-                    className="form-control"
-                    name="image_name_4"
+                    name="image_2"
+                    onChange={handleFileChange}
+                    accept="image/*"
                   />
                 </div>
               </div>

@@ -10,6 +10,6 @@ export async function POST(req) {
 export async function PUT(req) {
     return putHomePage(req);
 }
-export async function DELETE(req) {
+export async function PATCH(req) {
     return deleteHomePage(req);
 }

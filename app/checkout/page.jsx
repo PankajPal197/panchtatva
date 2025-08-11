@@ -222,7 +222,7 @@ const page = () => {
                             <div className="items"><span>test</span><br/>color:red <br /><span>1X</span></div>
                             <div className="items-price">₹860</div>
                         </div>
-                        <div className="flex items-center justify-between mt-2 border-bottom">
+                        <div className="flex items-center justify-between mt-2 border-bottomnpn">
                             <div className="items"><span>test</span><br/>color:red <br /><span>1X</span></div>
                             <div className="items-price">₹860</div>
                         </div>

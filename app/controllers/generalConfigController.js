@@ -4,7 +4,6 @@ import connectDB from "../utils/Database";
 import path from "path";
 import fs from "fs/promises";
 
-
 export const createGenralConfig = async (req) => {
   try {
     await connectDB();
@@ -115,83 +114,103 @@ export const createGenralConfig = async (req) => {
 
 
 
-  // export const createGenralConfig = async (req) => {
-  //   try {
-  //     await connectDB();
 
-  //     const formData = await req.formData();
+export const getGenralConfiguration = async(req)=>{
+  try{
+    await connectDB();
+    const data=await GeneralConfig.find();
+    return NextResponse.json({
+      success:true,
+      status:201,
+      data
+    })
 
-  //     const getText = (key) => formData.get(key) || null;
+  }
+  catch(err){
+    return NextResponse.json({
+      message:message.err,
+      success:false,
+      status:500
+    })
+  }
+}
+// export const createGenralConfig = async (req) => {
+//   try {
+//     await connectDB();
 
-  //     // Save uploaded file to /public/uploads and return file path
-      // const saveFile = async (file, filenamePrefix) => {
-      //   if (!file || typeof file.arrayBuffer !== "function") return null;
+//     const formData = await req.formData();
 
-      //   const buffer = Buffer.from(await file.arrayBuffer());
-      //   const ext = file.name.split(".").pop();
-      //   const fileName = `${filenamePrefix}_${Date.now()}.${ext}`;
-      //   const uploadPath = path.join(
-      //     process.cwd(),
-      //     "public",
-      //     "general_config",
-      //     fileName
-      //   );
+//     const getText = (key) => formData.get(key) || null;
 
-      //   await fs.writeFile(uploadPath, buffer);
-      //   return `/general_config/${fileName}`; // public path
-      // };
+//     // Save uploaded file to /public/uploads and return file path
+// const saveFile = async (file, filenamePrefix) => {
+//   if (!file || typeof file.arrayBuffer !== "function") return null;
 
-      // const logoFile = formData.get("header_logo");
-      // const footerFile = formData.get("footer_logo");
-      // const favIconFile = formData.get("fav_icon_logo");
-      // const appleFile = formData.get("apple_icon_logo");
+//   const buffer = Buffer.from(await file.arrayBuffer());
+//   const ext = file.name.split(".").pop();
+//   const fileName = `${filenamePrefix}_${Date.now()}.${ext}`;
+//   const uploadPath = path.join(
+//     process.cwd(),
+//     "public",
+//     "general_config",
+//     fileName
+//   );
 
-      // const logoPath = await saveFile(logoFile, "logo");
-      // const footerPath = await saveFile(footerFile, "logo");
-      // const favIconPath = await saveFile(favIconFile, "logo");
-      // const applePath = await saveFile(appleFile, "logo");
+//   await fs.writeFile(uploadPath, buffer);
+//   return `/general_config/${fileName}`; // public path
+// };
 
-  //     const config = await GeneralConfig.create({
-  //       website_name: getText("website_name"),
-  //       email_ids: getText("email_ids"),
-  //       phone_no: getText("phone_no"),
-  //       whats_phone_no: getText("whats_phone_no"),
-  //       google_map_url: getText("google_map_url"),
-  //       address_1: getText("address_1"),
-  //       address_2: getText("address_2"),
-  //       facebok_url: getText("facebok_url"),
-  //       linkedin_url: getText("linkedin_url"),
-  //       twitter_url: getText("twitter_url"),
-  //       youtube_url: getText("youtube_url"),
-  //       insta_url: getText("insta_url"),
-  //       home_title: getText("home_title"),
-  //       home_desc: getText("home_desc"),
-  //       home_keyword: getText("home_keyword"),
-  //       xml_cate: getText("xml_cate"),
-  //       xml_city: getText("xml_city"),
-  //       robots: getText("robots"),
-  //       header_logo: logoPath,
-  //       footer_logo: footerPath,
-  //       fav_icon_logo: favIconPath,
-  //       apple_icon_logo: applePath,
-  //     });
+// const logoFile = formData.get("header_logo");
+// const footerFile = formData.get("footer_logo");
+// const favIconFile = formData.get("fav_icon_logo");
+// const appleFile = formData.get("apple_icon_logo");
 
-  //     return NextResponse.json(
-  //       {
-  //         message: "✅ General Configuration saved with file",
-  //         success: true,
-  //         config,
-  //       },
-  //       { status: 201 }
-  //     );
-  //   } catch (error) {
-  //     console.error("SERVER ERROR:", error);
-  //     return NextResponse.json(
-  //       {
-  //         message: error.message,
-  //         success: false,
-  //       },
-  //       { status: 500 }
-  //     );
-  //   }
-  // };
+// const logoPath = await saveFile(logoFile, "logo");
+// const footerPath = await saveFile(footerFile, "logo");
+// const favIconPath = await saveFile(favIconFile, "logo");
+// const applePath = await saveFile(appleFile, "logo");
+
+//     const config = await GeneralConfig.create({
+//       website_name: getText("website_name"),
+//       email_ids: getText("email_ids"),
+//       phone_no: getText("phone_no"),
+//       whats_phone_no: getText("whats_phone_no"),
+//       google_map_url: getText("google_map_url"),
+//       address_1: getText("address_1"),
+//       address_2: getText("address_2"),
+//       facebok_url: getText("facebok_url"),
+//       linkedin_url: getText("linkedin_url"),
+//       twitter_url: getText("twitter_url"),
+//       youtube_url: getText("youtube_url"),
+//       insta_url: getText("insta_url"),
+//       home_title: getText("home_title"),
+//       home_desc: getText("home_desc"),
+//       home_keyword: getText("home_keyword"),
+//       xml_cate: getText("xml_cate"),
+//       xml_city: getText("xml_city"),
+//       robots: getText("robots"),
+//       header_logo: logoPath,
+//       footer_logo: footerPath,
+//       fav_icon_logo: favIconPath,
+//       apple_icon_logo: applePath,
+//     });
+
+//     return NextResponse.json(
+//       {
+//         message: "✅ General Configuration saved with file",
+//         success: true,
+//         config,
+//       },
+//       { status: 201 }
+//     );
+//   } catch (error) {
+//     console.error("SERVER ERROR:", error);
+//     return NextResponse.json(
+//       {
+//         message: error.message,
+//         success: false,
+//       },
+//       { status: 500 }
+//     );
+//   }
+// };

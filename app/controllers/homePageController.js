@@ -55,11 +55,10 @@ export const postHomePage = async (req) => {
     const imagePath1 = await saveFile(ImageFile1, "image_1");
     const imagePath2 = await saveFile(ImageFile2, "image_2");
 
-    console.log("Paths:", imagePath1, imagePath2);
 
     // ✅ Create new home page section in DB (image path stored, not file)
     const homePageData = await HomePage.create({
-      m_id: Number(getText("m_id")),
+      m_id: Number(getText("m_id")|| 0),
       section_name: getText("section_name"),
       heading_1: getText("heading_1"),
       heading_2: getText("heading_2"),
@@ -68,10 +67,10 @@ export const postHomePage = async (req) => {
       short_content_2: getText("short_content_2"),
       long_content_1: getText("long_content_1"),
       long_content_2: getText("long_content_2"),
-      sort_order: Number(getText("sort_order")),
+      sort_order: Number(getText("sort_order")|| 1),
       delete_status: getText("delete_status"),
       status: getText("status"),
-      delete_by: Number(getText("delete_by")),
+      delete_by: Number(getText("delete_by")|| 0),
       image_1: imagePath1,
       image_2: imagePath2,
     });
@@ -140,7 +139,7 @@ export const putHomePage = async (req) => {
 
 
     const updateData = {
-       m_id: Number(getText("m_id")),
+       m_id: Number(getText("m_id") || 0),
       section_name: getText("section_name"),
       heading_1: getText("heading_1"),
       heading_2: getText("heading_2"),
@@ -149,10 +148,10 @@ export const putHomePage = async (req) => {
       short_content_2: getText("short_content_2"),
       long_content_1: getText("long_content_1"),
       long_content_2: getText("long_content_2"),
-      sort_order: Number(getText("sort_order")),
+      sort_order: Number(getText("sort_order") || 1),
       delete_status: getText("delete_status"),
       status: getText("status"),
-      delete_by: Number(getText("delete_by")),
+      delete_by: Number(getText("delete_by") || 0),
       image_1: imagePath1,
       image_2: imagePath2,
     };

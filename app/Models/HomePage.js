@@ -4,7 +4,7 @@ const homePageSchema = new mongoose.Schema(
   {
     m_id: {
       type: Number,
-      default: null,
+      default: 0,
     },
     section_name: {
       type: String,

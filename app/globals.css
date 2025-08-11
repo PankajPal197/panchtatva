@@ -232,6 +232,36 @@ ul {
     margin: auto;
 }
 
+.radio-ring{
+    border-radius: 50%;
+    padding: 10px;
+}
+
+/* btn submit  */
+.btn-submit{
+    padding: 10px 5px;
+    background: var(--base-color);
+    color: var(--white-color);
+    border-radius: 5px;
+    width: 100%;
+}
+.btn-submit:hover{
+     background: var(--secondary-color);
+}
+/* blog  */
+.latest-blog{
+    margin-top: 2rem;
+}
+.latest-blog .content h3{
+    font-size: 1.2rem !important;
+}
+.latest-blog .content a{
+text-decoration: none;
+color: var(--black-color);
+}
+.ck-editor__editable_inline {
+  min-height: 200px;
+}
 /* responsive */
 @media (max-width:992px) {
     .header .desktop {

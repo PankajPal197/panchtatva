@@ -35,7 +35,7 @@ const Carousel = ({images}) => {
       <Slider {...settings}>
         {images.map((img, index) => (
           <div key={index}>
-            <img src={img.url} alt={`Slide ${index + 1}`} className="w-full " width={100} height={400}/>
+            <img src={img.url} alt={`Banner ${index + 1}`} className="w-full " width={100} height={400}/>
           </div>
         ))}
       </Slider>

@@ -1,41 +1,26 @@
+
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
 
-export function middleware(req) {
-  const token = req.cookies.get("token")?.value;
+export function middleware(request) {
+  const token = request.cookies.get('token')?.value;
 
-  // ✅ If no token, only allow /login, /register
-  if (!token) {
-    if (req.nextUrl.pathname.startsWith('/dashboard') || req.nextUrl.pathname.startsWith('/admin')) {
-      return NextResponse.redirect(new URL('/login', req.url));
-    }
-    return NextResponse.next();
+  // Protected routes
+  const protectedRoutes = ['/dashboard'];
+
+  const isProtected = protectedRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route)
+  );
+
+  if (isProtected && !token) {
+    return NextResponse.redirect(new URL('/login', request.url));
+
   }
+console.log("Middleware triggered: ", pathname, "Token:", token);
 
-  try {
-    const decoded = jwt.verify(token, "!@$#%^");
-
-    // ✅ Block /login for logged-in users
-    if (req.nextUrl.pathname === '/login') {
-      if (decoded.role === 'admin') {
-        return NextResponse.redirect(new URL('/admin', req.url));
-      } else {
-        return NextResponse.redirect(new URL('/dashboard', req.url));
-      }
-    }
-
-    // ✅ Block /admin if role is not admin
-    if (req.nextUrl.pathname.startsWith('/admin') && decoded.role !== 'admin') {
-      return NextResponse.redirect(new URL('/unauthorized', req.url));
-    }
-
-    return NextResponse.next();
-  } catch (err) {
-    // Token invalid — redirect to login
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
+  return NextResponse.next();
 }
 
+// Apply middleware only to matching routes
 export const config = {
-  matcher: ['/login', '/dashboard/:path*', '/admin/:path*'],
+  matcher: ['/dashboard/:path*'],
 };
