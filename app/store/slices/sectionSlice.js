@@ -65,7 +65,7 @@ export const updateHomePage = createAsyncThunk(
 
       return res.data;
     } catch (error) {
-      console.log("Update Error:", error.response?.data); // 👈 debug this
+      console.log("Update Error:", error.response?.data);
       return rejectWithValue(
         error.response?.data || { message: "Update failed" }
       );

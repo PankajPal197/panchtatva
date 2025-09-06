@@ -7,47 +7,66 @@
     --secondary-color: #f36c69;
     --white-color: #ffffff;
     --primary-color: #000000c4;
-    --black-color:#000000;
+    --black-color: #000000;
 
 }
 
 .p-tb-60 {
     padding: 1px 60px;
 }
-h1, .h1{
+
+h1,
+.h1 {
     font-size: 2rem !important;
     line-height: 1.2;
     font-weight: 500;
 }
-h2, .h2{
+
+h2,
+.h2 {
     font-size: 1.8rem !important;
     line-height: 1.2;
     font-weight: 500;
 }
-h3, .h3{
+
+h3,
+.h3 {
     font-size: 1.5rem !important;
     line-height: 1.2;
     font-weight: 500;
 }
-h4, .h4{
+
+h4,
+.h4 {
     font-size: 1.2rem !important;
     line-height: 1.2;
     font-weight: 500;
 }
-h5, .h5{
+
+h5,
+.h5 {
     font-size: 1rem !important;
     line-height: 1.2;
     font-weight: 500;
 }
-h6, .h6{
+
+h6,
+.h6 {
     font-size: 0.8rem !important;
     line-height: 1.2;
     font-weight: 500;
 }
+
 ul {
     padding-left: 0 !important;
 }
 
+tbody {
+    text-transform: capitalize;
+}
+a{
+    text-decoration: none !important;
+}
 /* header  */
 .header {
     background-color: var(--base-color);
@@ -120,28 +139,37 @@ ul {
     color: var(--white-color);
     bottom: 0;
 }
-.footer a{
+
+.footer a {
     color: var(--white-color);
     text-decoration: none;
     line-height: 2;
 
 }
-.footer a:hover{
+
+.footer a:hover {
     color: var(--base-color);
 }
 
 /* category  */
-.category-item a{
-    color: var(--black-color );
+.category-item a {
+    color: var(--black-color);
     text-decoration: none;
 }
-.category-item a:hover{color: var(--base-color );}
+
+.category-item a:hover {
+    color: var(--base-color);
+}
+
 /* blog */
-.blog a{
-    color: var(--black-color );
+.blog a {
+    color: var(--black-color);
     text-decoration: none;
 }
-.blog a:hover{color: var(--base-color );}
+
+.blog a:hover {
+    color: var(--base-color);
+}
 
 /* button  */
 .button button {
@@ -169,7 +197,7 @@ ul {
 .topbar {
     background-color: var(--secondary-color);
     width: 100%;
-    padding: 80px 0 15px;
+    padding: 2px 0 15px;
 }
 
 /* hero section  */
@@ -232,36 +260,51 @@ ul {
     margin: auto;
 }
 
-.radio-ring{
+.radio-ring {
     border-radius: 50%;
     padding: 10px;
 }
 
 /* btn submit  */
-.btn-submit{
+.btn-submit {
     padding: 10px 5px;
     background: var(--base-color);
     color: var(--white-color);
     border-radius: 5px;
     width: 100%;
 }
-.btn-submit:hover{
-     background: var(--secondary-color);
+
+.btn-submit:hover {
+    background: var(--secondary-color);
 }
+
 /* blog  */
-.latest-blog{
+.latest-blog {
     margin-top: 2rem;
 }
-.latest-blog .content h3{
+
+.latest-blog .content h3 {
     font-size: 1.2rem !important;
 }
-.latest-blog .content a{
-text-decoration: none;
-color: var(--black-color);
+
+.latest-blog .content a {
+    text-decoration: none;
+    color: var(--black-color);
 }
+
 .ck-editor__editable_inline {
-  min-height: 200px;
+    min-height: 200px;
 }
+/* category  */
+ .item-menu h3 {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    background: #2f2f2fb0;
+    padding: 10px 5px;
+    color: #ffffff;
+}
+
 /* responsive */
 @media (max-width:992px) {
     .header .desktop {

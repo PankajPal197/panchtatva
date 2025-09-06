@@ -33,10 +33,8 @@ export const updateBlog = createAsyncThunk(
     try {
       const formData = new FormData();
 
-      // ✅ Append the ID first
-      formData.append("id", updatedData.id); // 🔴 this is the missing line
-
-      // ✅ Append other fields
+      // Append the ID first
+      formData.append("id", updatedData.id);
 
       formData.append("blog_name", updatedData.blog_name || "");
       formData.append("page_url", updatedData.page_url || 0);
@@ -53,10 +51,10 @@ export const updateBlog = createAsyncThunk(
       formData.append("delete_by", updatedData.delete_by || 1);
 
       // ✅ File (if available)
-      if (updatedData.image_1 instanceof File) {
+      if (updatedData.blog_image_1 instanceof File) {
         formData.append("blog_image_1", updatedData.blog_image_1);
       }
-      if (updatedData.image_2 instanceof File) {
+      if (updatedData.blog_image_2 instanceof File) {
         formData.append("blog_image_2", updatedData.blog_image_2);
       }
 

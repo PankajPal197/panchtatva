@@ -12,6 +12,7 @@ const Carousel = ({images}) => {
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 3000, 
+         adaptiveHeight: true,
         responsive:[
             {
                 breakpoint:1024,
@@ -35,7 +36,7 @@ const Carousel = ({images}) => {
       <Slider {...settings}>
         {images.map((img, index) => (
           <div key={index}>
-            <img src={img.url} alt={`Banner ${index + 1}`} className="w-full " width={100} height={400}/>
+            <img src={img.url} alt={`Banner-${index + 1}`} className="w-full h-[480px]"/>
           </div>
         ))}
       </Slider>

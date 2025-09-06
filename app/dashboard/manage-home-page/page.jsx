@@ -6,7 +6,6 @@ import ToggleSwitch from "../components/ToggleSwitch";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-// import { fetchHomePage } from "@/app/store/slices/sectionSlice";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import {
@@ -72,7 +71,7 @@ const page = () => {
 
     dispatch(updateStatus({ id: item._id, status: newStatus }));
   };
- useEffect(() => {
+  useEffect(() => {
     if (banners?.length) {
       const initialSortOrder = {};
       banners.forEach((item) => {
@@ -82,42 +81,39 @@ const page = () => {
     }
   }, [banners]);
   const handleSortOrderChange = (e, id) => {
-      const value = e.target.value;
-      if (/^\d*$/.test(value)) {
-        setSortOrder((prev) => ({
-          ...prev,
-          [id]: value,
-        }));
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setSortOrder((prev) => ({
+        ...prev,
+        [id]: value,
+      }));
+    }
+  };
+  const handleEnterKey = (e, id) => {
+    if (e.key === "Enter") {
+      const value = parseInt(sortOrder[id], 10);
+
+      if (!isNaN(value)) {
+        dispatch(updateSortOrder({ id, sort_order: value }));
       }
-  
-      // const newValue = e.target.value;
-      // dispatch(updateSortOrder({ id, sort_order: newValue }));
-    };
-    const handleEnterKey = (e, id) => {
-      if (e.key === "Enter") {
-        const value = parseInt(sortOrder[id], 10);
-  
-        if (!isNaN(value)) {
-          dispatch(updateSortOrder({ id, sort_order: value }));
-        }
-      }
-    };
-    useEffect(() => {
-      if (updateSortOrderStatus === "succeeded") {
-        Swal.fire({
-          icon: "success",
-          title: "Updated!",
-          text: "Sort order updated successfully.",
-          timer: 2000,
-          showConfirmButton: false,
-        });
-      }
-    }, [updateSortOrderStatus]);
-    const idNames = {
-  0: "root",
-  1: "Category 1",
-  2: "Category 2"
-};
+    }
+  };
+  useEffect(() => {
+    if (updateSortOrderStatus === "succeeded") {
+      Swal.fire({
+        icon: "success",
+        title: "Updated!",
+        text: "Sort order updated successfully.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    }
+  }, [updateSortOrderStatus]);
+  const idNames = {
+    0: "root",
+    1: "Category 1",
+    2: "Category 2",
+  };
   return (
     <Layout>
       <section className="px-3">
@@ -150,14 +146,13 @@ const page = () => {
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="tbody">
               {banners?.length > 0 ? (
                 banners.map((item, index) => (
                   <tr key={item._id}>
                     <td>{index + 1}</td>
                     <td>{item.section_name}</td>
-                    {/* <td>{idNames[item.m_id] || item.m_id}</td> */}
-                   <td>{idNames[item.m_id === 0] ? "Parent Root" : idNames[item.m_id]}</td>
+                    <td>{item.parentName}</td>
                     <td>
                       <input
                         type="text"
@@ -198,9 +193,12 @@ const page = () => {
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan="6" className="text-center py-4">
-                    {loading ? "Loading banners..." : "No banners found."}
+                <tr className=" ">
+                  <td
+                    colSpan="6"
+                    className="text-center text-danger fw-medium fs-5  py-4"
+                  >
+                    {loading ? "Loading Home Page..." : "No Home Page found."}
                   </td>
                 </tr>
               )}

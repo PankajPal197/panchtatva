@@ -3,8 +3,14 @@ import mongoose from "mongoose";
 const homePageSchema = new mongoose.Schema(
   {
     m_id: {
-      type: Number,
+      type: mongoose.Schema.Types.Mixed,
       default: 0,
+      validate: {
+        validator: function (v) {
+          return v === 0 || mongoose.Types.ObjectId.isValid(v);
+        },
+        message: (props) => `${props.value} is not a valid ObjectId or 0`,
+      },
     },
     section_name: {
       type: String,

@@ -57,9 +57,9 @@ const Footer = () => {
           <div className=" col-lg-3 col-md-4 col-sm-6 col-12">
             <span className="text-2xl font-medium mb-3">Important Links</span>
             <ul className="mt-3">
-              <li>
+              {/* <li>
                 <Link href={"/our-presence"}>Our Presene</Link>
-              </li>
+              </li> */}
               <li>
                 <Link href={"/privacy-policy"}>Privacy Policy</Link>
               </li>

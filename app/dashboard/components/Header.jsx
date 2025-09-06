@@ -5,20 +5,35 @@ import { FaSlidersH, FaTools, FaUsers } from "react-icons/fa";
 import { FaScrewdriverWrench, FaArrowRightFromBracket } from "react-icons/fa6";
 import "./style.css";
 import LogoutButton from "./LogoutButton";
+import Image from "next/image";
 // import { IoMdHome } from "react-icons/io";
+
+
 const Header = () => {
   return (
     <>
       {/* topbar start  */}
-      <div className="px-10 py-3 ">
-        <div className="row">
-          <div className="col-md-4">Logo Image</div>
-          <div className="col-md-4">
+      <div className="p-tb-60 ">
+        <div className="row align-items-center">
+          <div className="col-md-4 mt-2">
+            <Link href="/">
+              <Image src="/logo.png" alt="logo" width={100} height={40} />
+            </Link>
+          </div>
+          <div className="col-md-4 mt-2 text-center">
             <p className="text-red-500 fw-bold">
               Use CTRL + S command to save form data
             </p>
           </div>
-          <div className="col-md-4">Welcome to UserName | Current Date</div>
+          <div className="col-md-4 mt-2 text-right">
+           <span className="me-2"> Welcome to UserName</span> <span className="me-2">|</span>
+            {new Date().toLocaleDateString("en-IN", {
+              weekday: "short",
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
+          </div>
         </div>
       </div>
       {/* topbar start  */}
@@ -27,20 +42,19 @@ const Header = () => {
         <nav class="navbar fixed top-0 left-0 w-full bg-black text-white shadow z-50">
           <div class="max-w-7xl flex justify-between items-center p-1 ml-3">
             <ul class="flex space-x-6 ">
-               <li class=" hover:text-blue-600 cursor-pointer header-dashboard">
-              <Link
-                a
-                href="./"
-                className="text-decoration-none d-flex  text-white hover:text-blue-600"
-              >
-               
+              <li class=" hover:text-blue-600 cursor-pointer header-dashboard">
+                <Link
+                  a
+                  href="./"
+                  className="text-decoration-none d-flex  text-white hover:text-blue-600"
+                >
                   <IoMdHome size={20} className="mr-2" /> Dashboard
                 </Link>
-                </li>
-              
+              </li>
+
               <li class="relative group d-flex items-center cursor-pointer hover:text-cyan-600 header-dashboard">
-                  <FaSlidersH size={15} className="mr-2" />
-                  General Configuration
+                <FaSlidersH size={15} className="mr-2" />
+                General Configuration
                 <ul
                   class="absolute hidden group-hover:block bg-white top-6 text-black mt-1 rounded shadow"
                   style={{ paddingLeft: 0 }}
@@ -66,8 +80,8 @@ const Header = () => {
                 </ul>
               </li>
               <li class="hover:text-cyan-500 relative group d-flex items-center cursor-pointer header-dashboard">
-                  <FaScrewdriverWrench size={15} className="mr-2" /> Admin
-                  Management
+                <FaScrewdriverWrench size={15} className="mr-2" /> Admin
+                Management
                 <ul
                   class="absolute hidden group-hover:block top-6 bg-white text-black mt-1 rounded shadow"
                   style={{ paddingLeft: 0 }}
@@ -91,8 +105,8 @@ const Header = () => {
                 </ul>
               </li>
               <li class="hover:text-cyan-500 relative group d-flex items-center cursor-pointer header-dashboard">
-                  <FaTools size={15} className="mr-2"/>
-                  Tools
+                <FaTools size={15} className="mr-2" />
+                Tools
                 <ul
                   class="absolute hidden group-hover:block bg-white top-6 text-black mt-1 rounded shadow"
                   style={{ paddingLeft: 0 }}
@@ -131,8 +145,8 @@ const Header = () => {
                 </ul>
               </li>
               <li class="relative group d-flex items-center cursor-pointer hover:text-cyan-500 header-dashboard">
-                  <FaUsers size={15} className="mr-2"/>
-                  Accounts
+                <FaUsers size={15} className="mr-2" />
+                Accounts
                 <ul
                   class="absolute hidden group-hover:block bg-white top-6 text-black mt-1 rounded shadow"
                   style={{ paddingLeft: 0 }}
@@ -168,7 +182,7 @@ const Header = () => {
                 </ul>
               </li>
               <li class=" hover:text-blue-600 d-flex items-center cursor-pointer">
-                <FaArrowRightFromBracket size={15} className="mr-2"/>
+                <FaArrowRightFromBracket size={15} className="mr-2" />
                 <LogoutButton />
               </li>
             </ul>

@@ -6,9 +6,14 @@ const CategoriesSchema = new mongoose.Schema(
       default: null,
     },
     parent_category_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-      default: null,
+      type: mongoose.Schema.Types.Mixed,
+      default: 0,
+      validate: {
+        validator: function (v) {
+          return v === 0 || mongoose.Types.ObjectId.isValid(v);
+        },
+        message: (props) => `${props.value} is not a valid ObjectId or 0`,
+      },
     },
     page_url: {
       type: String,
@@ -37,6 +42,12 @@ const CategoriesSchema = new mongoose.Schema(
     seo_keywords: {
       type: String,
       default: null,
+    },
+    rating: {
+      type: Number,
+      min: 0,
+      max: 5,
+      default: 0,
     },
     short_content_1: {
       type: String,
@@ -82,7 +93,7 @@ const CategoriesSchema = new mongoose.Schema(
     home_status: {
       type: String,
       enum: ["active", "inactive"],
-      default: "active",
+      default: "inactive",
     },
     delete_status: {
       type: String,

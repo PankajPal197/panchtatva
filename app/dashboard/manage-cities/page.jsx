@@ -149,7 +149,6 @@ const page = () => {
                 cities.map((item, index) => (
                   <tr key={item._id}>
                     <td>{index + 1}</td>
-                    {/* <td>{item.heading_1}</td> */}
                     <td>{item.city_name}</td>
                     <td>{item.page_url}</td>
                     <td>

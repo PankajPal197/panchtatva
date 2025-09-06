@@ -373,8 +373,8 @@ const page = () => {
                     cols={3}
                     rows={3}
                     className="form-control"
-                    name="short_content_1"
-                    value={formData.short_content_1}
+                    name="short_content_2"
+                    value={formData.short_content_2}
                     onChange={handleInputChange}
                   />
                 </div>

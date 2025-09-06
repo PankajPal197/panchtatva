@@ -6,9 +6,9 @@ import {
   getSectionById,
   updateHomePage,
 } from "@/app/store/slices/sectionSlice";
-
 import { useParams, useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import HomepageDropdown from "./HomepageDropdown";
 const CKEditorClient = dynamic(() => import("../components/CKEditorClient"), {
   ssr: false,
 });
@@ -73,14 +73,11 @@ const SectionEditForm = () => {
     }
   };
   const handleEditorChange = (name, value) => {
-  setFormData({
-    ...formData,
-    [name]: value,
-  });
-};
-  // const handleFileChange = (e) => {
-  //   setFormData({ ...formData, image_name: e.target.files[0] });
-  // };
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -96,7 +93,7 @@ const SectionEditForm = () => {
 
       if (updateHomePage.fulfilled.match(resultAction)) {
         Swal.fire("Updated!", "Home Page updated successfully!", "success");
-        router.push("/dashboard/manage-home-page"); // change route as needed
+        router.push("/dashboard/manage-home-page");
       } else {
         throw new Error(resultAction.payload?.message || "Failed to update");
       }
@@ -104,9 +101,9 @@ const SectionEditForm = () => {
       Swal.fire("Error", err.message, "error");
     }
   };
+  // console.log(selectedBanner);
 
-  if (loading || !selectedBanner) return <div>Loading...</div>;
-  // console.log(resultAction);
+  // if (loading || !selectedBanner) return <div>Loading...</div>;
   return (
     <form
       onSubmit={handleUpdate}
@@ -130,22 +127,8 @@ const SectionEditForm = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-6 mt-3">
-          <div className="row items-center">
-            <div className="col-md-3">
-              <label>
-                Parent Category <span className="text-red-600">*</span>
-              </label>
-            </div>
-            <div className="col-md-9">
-              <select className="form-select" name="m_id">
-                <option value="0" style={{ color: "red" }}>
-                  Root Category
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
+        <HomepageDropdown formData={formData} setFormData={setFormData} />
+
         <div className="col-md-6 mt-3">
           <div className="row items-center">
             <div className="col-md-3">

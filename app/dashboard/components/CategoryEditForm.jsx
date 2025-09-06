@@ -9,7 +9,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import CategoryDropdown from "./CategoryDropdown";
 import Swal from "sweetalert2";
-
 const CKEditorClient = dynamic(() => import("./CKEditorClient"), {
   ssr: false,
 });
@@ -60,6 +59,8 @@ const CategoryEditForm = () => {
         seo_keywords: selectedCategory.seo_keywords || "",
         short_content_1: selectedCategory.short_content_1 || "",
         short_content_2: selectedCategory.short_content_2 || "",
+        long_content_1: selectedCategory.long_content_1 || "",
+        long_content_2: selectedCategory.long_content_2 || "",
         sort_order: selectedCategory.sort_order || 1,
         status: selectedCategory.status || "active",
         image_name_1: selectedCategory.image_name_1 || null,
@@ -88,7 +89,6 @@ const CategoryEditForm = () => {
         [name]: value,
       });
     }
-    // setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleEditorChange = (name, value) => {
@@ -344,8 +344,8 @@ const CategoryEditForm = () => {
                 cols={3}
                 rows={3}
                 className="form-control"
-                name="short_content_1"
-                value={formData.short_content_1}
+                name="short_content_2"
+                value={formData.short_content_2}
                 onChange={handleChange}
               />
             </div>
@@ -402,6 +402,14 @@ const CategoryEditForm = () => {
                 onChange={handleFileChange}
                 accept="image/*"
               />
+               {selectedCategory?.image_name_1 && (
+                <img
+                  src={selectedCategory.image_name_1}
+                  alt="Current Banner"
+                  className="mt-2"
+                  style={{ maxHeight: "150px" }}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -420,6 +428,14 @@ const CategoryEditForm = () => {
                 onChange={handleFileChange}
                 accept="image/*"
               />
+               {selectedCategory?.image_name_2 && (
+                <img
+                  src={selectedCategory.image_name_2}
+                  alt="Current Banner"
+                  className="mt-2"
+                  style={{ maxHeight: "150px" }}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -438,6 +454,14 @@ const CategoryEditForm = () => {
                 onChange={handleFileChange}
                 accept="image/*"
               />
+               {selectedCategory?.image_name_3 && (
+                <img
+                  src={selectedCategory.image_name_3}
+                  alt="Current Banner"
+                  className="mt-2"
+                  style={{ maxHeight: "150px" }}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -456,6 +480,14 @@ const CategoryEditForm = () => {
                 onChange={handleFileChange}
                 accept="image/*"
               />
+               {selectedCategory?.image_name_4 && (
+                <img
+                  src={selectedCategory.image_name_4}
+                  alt="Current Banner"
+                  className="mt-2"
+                  style={{ maxHeight: "150px" }}
+                />
+              )}
             </div>
           </div>
         </div>

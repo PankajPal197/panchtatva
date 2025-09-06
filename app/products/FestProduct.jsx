@@ -19,18 +19,20 @@ const FestProduct = ({cards}) => {
             whileTap={{ scale: 0.95 }}
             className="card shadow-2xl  rounded-3xl bg-sky-950 text-white"
             style={{
-                backgroundImage: `url(${item.image})`,
+                backgroundImage: `url(${item.image_name_1})`,
                 minHeight: "220px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: "10px",
                 backgroundSize: "cover",
+                backgroundRepeat:"no-repeat",
+                backgroundPosition: "center",
               }}
           >
             <div className="absolute left-1 pl-1">
               <span >{item.brand}</span>
-              <h3 className=''>{item.name}
+              <h3 className=''>{item.category_name}
               </h3>
               <Button />
             </div>

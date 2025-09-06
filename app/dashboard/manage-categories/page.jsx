@@ -14,7 +14,6 @@ import {
   updateStatus,
 } from "@/app/store/slices/categorySlice";
 import Swal from "sweetalert2";
-
 const page = () => {
   const [sortOrder, setSortOrder] = useState({});
   const dispatch = useDispatch();
@@ -66,7 +65,6 @@ const page = () => {
 
   const handleStatusChange = (item) => {
     const newStatus = item.status === "active" ? "inactive" : "active";
-    // const newHomeStatus = item.home_status  === "active" ? "inactive" : "active";
     console.log("Clicked toggle for status:", newStatus);
 
     dispatch(updateStatus({ id: item._id, status: newStatus }));
@@ -202,7 +200,7 @@ const page = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="text-center py-4">
+                  <td colSpan="6" className="text-center bg-amber-200 text-danger fw-medium py-4">
                     {loading ? "Loading category..." : "No category found."}
                   </td>
                 </tr>

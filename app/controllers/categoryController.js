@@ -25,10 +25,37 @@ export const postCategory = async (req) => {
       const value = formData.get(key);
       return value === "" || value === null ? undefined : value;
     };
+    // validate file size and file format
+    const validateFile = (file) => {
+      if (!file || typeof file.arrayBuffer !== "function")
+        return { valid: false, reason: "No file provided", skip: true };
+
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp",
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        return {
+          valid: false,
+          reason: "Invalid file format. Only JPEG, JPG, PNG, WEBP allowed.",
+        };
+      }
+
+      const maxSize = 2 * 1024 * 1024; // 2MB
+      if (file.size > maxSize) {
+        return { valid: false, reason: "File size exceeds 2MB" };
+      }
+
+      return { valid: true };
+    };
 
     // save file to disk and return public path
     const saveFile = async (file, filenamePrefix) => {
-      if (!file || typeof file.arrayBuffer !== "function") return null;
+      const validation = validateFile(file);
+      if (validation.skip) return null;
+      if (!validation.valid) throw new Error(validation.reason);
       const buffer = Buffer.from(await file.arrayBuffer());
       const ext = file.name.split(".").pop();
       const fileName = `${filenamePrefix}_${Date.now()}.${ext}`;
@@ -40,25 +67,34 @@ export const postCategory = async (req) => {
       );
 
       await fs.mkdir(path.dirname(uploadPath), { recursive: true });
-      await fs.writeFile(uploadPath, buffer);
-
+      try {
+        await fs.access(uploadPath);
+        console.log(`File already exists: ${fileName}`);
+      } catch {
+        await fs.writeFile(uploadPath, buffer);
+        console.log(`File saved: ${fileName}`);
+      }
       return `/category/${fileName}`;
     };
-    const ImageFile1 = formData.get("image_name_1");
-    const ImageFile2 = formData.get("image_name_2");
-    const ImageFile3 = formData.get("image_name_3");
-    const ImageFile4 = formData.get("image_name_4");
-
-    const imagePath1 = await saveFile(ImageFile1, "image_name_1");
-    const imagePath2 = await saveFile(ImageFile2, "image_name_2");
-    const imagePath3 = await saveFile(ImageFile3, "image_name_3");
-    const imagePath4 = await saveFile(ImageFile4, "image_name_4");
-
+    const imageFields = [
+      "image_name_1",
+      "image_name_2",
+      "image_name_3",
+      "image_name_4",
+    ];
+    const images = {};
+    for (const field of imageFields) {
+      const file = formData.get(field);
+      if (file && typeof file.arrayBuffer === "function") {
+        images[field] = await saveFile(file, field);
+      }
+    }
+    // get num value
     const parseNumber = (value, fallback = 0) => {
       const num = Number(value);
       return isNaN(num) ? fallback : num;
     };
-    // ✅ Fix parent_category_id logic
+    // get parent_category_id in parse helper
     let parentCategoryId;
     try {
       parentCategoryId = parseParentCategoryId(getText("parent_category_id"));
@@ -86,12 +122,8 @@ export const postCategory = async (req) => {
       delete_status: getText("delete_status"),
       status: getText("status"),
       delete_by: parseNumber(getText("delete_by"), 1),
-      image_name_1: imagePath1,
-      image_name_2: imagePath2,
-      image_name_3: imagePath3,
-      image_name_4: imagePath4,
+      ...images,
     });
-
     return NextResponse.json(
       {
         message: "Category created and saved successfully",
@@ -122,6 +154,14 @@ export const updateCategory = async (req) => {
         { status: 400 }
       );
 
+    const existingCategory = await Categories.findById(id);
+    if (!existingCategory) {
+      return NextResponse.json(
+        { success: false, message: "Category not found" },
+        { status: 404 }
+      );
+    }
+
     const getText = (key) => {
       const value = formData.get(key);
       return value === "" || value === null ? undefined : value;
@@ -132,9 +172,36 @@ export const updateCategory = async (req) => {
       return isNaN(num) ? fallback : num;
     };
 
-    const saveFile = async (file, filenamePrefix) => {
-      if (!file || typeof file.arrayBuffer !== "function") return null;
+    const validateFile = (file) => {
+      if (!file || typeof file.arrayBuffer !== "function")
+        return { valid: false, reason: "No file provided", skip: true };
 
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp",
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        return {
+          valid: false,
+          reason: "Invalid file format. Only JPEG, JPG, PNG, WEBP allowed.",
+        };
+      }
+
+      const maxSize = 2 * 1024 * 1024; // 2MB
+      if (file.size > maxSize) {
+        return { valid: false, reason: "File size exceeds 2MB" };
+      }
+
+      return { valid: true };
+    };
+
+    // save file to disk and return public path
+    const saveFile = async (file, filenamePrefix) => {
+      const validation = validateFile(file);
+      if (validation.skip) return null;
+      if (!validation.valid) throw new Error(validation.reason);
       const buffer = Buffer.from(await file.arrayBuffer());
       const ext = file.name.split(".").pop();
       const fileName = `${filenamePrefix}_${Date.now()}.${ext}`;
@@ -146,23 +213,45 @@ export const updateCategory = async (req) => {
       );
 
       await fs.mkdir(path.dirname(uploadPath), { recursive: true });
-      await fs.writeFile(uploadPath, buffer);
-
-      return `/category/${fileName}`; // ✅ public path only
+      try {
+        await fs.access(uploadPath);
+        console.log(`File already exists: ${fileName}`);
+      } catch {
+        await fs.writeFile(uploadPath, buffer);
+        console.log(`File saved: ${fileName}`);
+      }
+      return `/category/${fileName}`;
+    };
+    const deleteOldFile = async (filePath) => {
+      if (!filePath) return;
+      const fullPath = path.join(process.cwd(), "public", filePath);
+      try {
+        await fs.unlink(fullPath);
+      } catch (err) {
+        console.warn(`Failed to delete old image: ${filePath}`);
+      }
     };
 
-    // Get files
-    const ImageFile1 = formData.get("image_name_1");
-    const ImageFile2 = formData.get("image_name_2");
-    const ImageFile3 = formData.get("image_name_3");
-    const ImageFile4 = formData.get("image_name_4");
-    // Save to disk
-    const imagePath1 = await saveFile(ImageFile1, "image_name_1");
-    const imagePath2 = await saveFile(ImageFile2, "image_name_2");
-    const imagePath3 = await saveFile(ImageFile3, "image_name_3");
-    const imagePath4 = await saveFile(ImageFile4, "image_name_4");
-
-     let parentCategoryId;
+    const imageFields = [
+      "image_name_1",
+      "image_name_2",
+      "image_name_3",
+      "image_name_4",
+    ];
+    const images = {};
+    for (const field of imageFields) {
+      const file = formData.get(field);
+      if (file && typeof file.arrayBuffer === "function") {
+        validateFile(file);
+        if (existingCategory[field]) {
+          await deleteOldFile(existingCategory[field]);
+        }
+        images[field] = await saveFile(file, field);
+      } else {
+        images[field] = existingCategory[field];
+      }
+    }
+    let parentCategoryId;
     try {
       parentCategoryId = parseParentCategoryId(getText("parent_category_id"));
     } catch (err) {
@@ -171,7 +260,6 @@ export const updateCategory = async (req) => {
         { status: 400 }
       );
     }
-
     const updateData = {
       category_name: getText("category_name"),
       parent_category_id: parentCategoryId,
@@ -190,29 +278,11 @@ export const updateCategory = async (req) => {
       delete_status: getText("delete_status"),
       status: getText("status"),
       delete_by: parseNumber(getText("delete_by"), 1),
-      image_name_1: imagePath1,
-      image_name_2: imagePath2,
-      image_name_3: imagePath3,
-      image_name_4: imagePath4,
+      ...images,
     };
-
-    if (ImageFile1 && typeof ImageFile1.arrayBuffer === "function") {
-      updateData.image_name_1 = await saveFile(ImageFile1, "image_name_1");
-    }
-    if (ImageFile2 && typeof ImageFile2.arrayBuffer === "function") {
-      updateData.image_name_2 = await saveFile(ImageFile2, "image_name_2");
-    }
-    if (ImageFile3 && typeof ImageFile3.arrayBuffer === "function") {
-      updateData.image_name_3 = await saveFile(ImageFile3, "image_name_3");
-    }
-    if (ImageFile4 && typeof ImageFile4.arrayBuffer === "function") {
-      updateData.image_name_4 = await saveFile(ImageFile4, "image_name_4");
-    }
-
     const updated = await Categories.findByIdAndUpdate(id, updateData, {
       new: true,
     });
-
     return NextResponse.json({
       success: true,
       message: "Updated successfully",

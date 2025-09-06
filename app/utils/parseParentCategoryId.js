@@ -8,14 +8,13 @@ function parseParentCategoryId(parentVal) {
     parentVal === "0" ||
     parentVal === 0
   ) {
-    return null;
+    return 0;
   }
 
   if (!mongoose.Types.ObjectId.isValid(parentVal)) {
     throw new Error("Invalid parent_category_id");
   }
-
-  return parentVal;
+  return new mongoose.Types.ObjectId(parentVal);
 }
 
 module.exports = parseParentCategoryId;

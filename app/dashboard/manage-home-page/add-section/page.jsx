@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { createHomePage } from "@/app/store/slices/sectionSlice";
 import Swal from "sweetalert2";
+import HomepageDropdown from "../../components/HomepageDropdown";
 
 const CKEditorClient = dynamic(
   () => import("../../components/CKEditorClient"),
@@ -168,25 +169,7 @@ const page = () => {
                 </div>
               </div>
             </div>
-            <div className="col-md-6 mt-3">
-              <div className="row items-center">
-                <div className="col-md-3">
-                  <label>
-                    Parent Category <span className="text-red-600">*</span>
-                  </label>
-                </div>
-                <div className="col-md-9">
-                  <select className="form-select" name="m_id">
-                    <option value="0" style={{ color: "red" }}>
-                      Root Category
-                    </option>
-                     <option value="1" style={{ color: "green" }}>
-                      Paula Mclean1
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </div>
+           <HomepageDropdown formData={formData} setFormData={setFormData}/>
 
             <div className="col-md-6 mt-3">
               <div className="row items-center">

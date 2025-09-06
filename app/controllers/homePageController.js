@@ -3,11 +3,26 @@ import connectDB from "../utils/Database";
 import path from "path";
 import fs from "fs/promises";
 import HomePage from "../Models/HomePage";
+import parseParentSectionId from "../helper/parseParentSectionId";
+import mongoose from "mongoose";
 
 export const getHomePage = async () => {
   try {
     await connectDB();
-    const data = await HomePage.find({ delete_status: "active" });
+    const allSections = await HomePage.find({ delete_status: "active" }).lean();
+    const data = allSections.map((item) => {
+      if (!item.m_id || item.m_id === 0) {
+        return { ...item, parentName: "Parent Root" };
+      } else {
+        const parent = allSections.find(
+          (sec) => String(sec._id) === String(item.m_id)
+        );
+        return {
+          ...item,
+          parentName: parent ? parent.section_name : "Unknown",
+        };
+      }
+    });
     return NextResponse.json({ success: true, data });
   } catch (err) {
     return NextResponse.json(
@@ -20,15 +35,12 @@ export const getHomePage = async () => {
 export const postHomePage = async (req) => {
   try {
     await connectDB();
-
     const formData = await req.formData();
     const getText = (key) => {
       const value = formData.get(key);
       return value === "" || value === null ? undefined : value;
     };
-    // const getText = (key) => formData.get(key) || null;
-
-    // ✅ Save file to disk and return public path
+    //file to disk
     const saveFile = async (file, filenamePrefix) => {
       if (!file || typeof file.arrayBuffer !== "function") return null;
 
@@ -41,11 +53,9 @@ export const postHomePage = async (req) => {
         "home_section",
         fileName
       );
-
       await fs.mkdir(path.dirname(uploadPath), { recursive: true });
       await fs.writeFile(uploadPath, buffer);
-
-      return `/home_section/${fileName}`; // ✅ public path only
+      return `/home_section/${fileName}`;
     };
 
     // Get files
@@ -54,12 +64,19 @@ export const postHomePage = async (req) => {
     // Save to disk
     const imagePath1 = await saveFile(ImageFile1, "image_1");
     const imagePath2 = await saveFile(ImageFile2, "image_2");
-
-
-    // ✅ Create new home page section in DB (image path stored, not file)
+    // Create new home page section in DB (image path stored, not file)
+    let parentSectionId;
+    try {
+      parentSectionId = parseParentSectionId(getText("m_id"));
+    } catch (err) {
+      return NextResponse.json(
+        { success: false, message: err.message },
+        { status: 400 }
+      );
+    }
     const homePageData = await HomePage.create({
-      m_id: Number(getText("m_id")|| 0),
       section_name: getText("section_name"),
+      m_id: parentSectionId,
       heading_1: getText("heading_1"),
       heading_2: getText("heading_2"),
       heading_3: getText("heading_3"),
@@ -67,10 +84,10 @@ export const postHomePage = async (req) => {
       short_content_2: getText("short_content_2"),
       long_content_1: getText("long_content_1"),
       long_content_2: getText("long_content_2"),
-      sort_order: Number(getText("sort_order")|| 1),
+      sort_order: Number(getText("sort_order") || 1),
       delete_status: getText("delete_status"),
       status: getText("status"),
-      delete_by: Number(getText("delete_by")|| 0),
+      delete_by: Number(getText("delete_by") || 0),
       image_1: imagePath1,
       image_2: imagePath2,
     });
@@ -106,11 +123,11 @@ export const putHomePage = async (req) => {
         { status: 400 }
       );
 
-     const getText = (key) => {
+    const getText = (key) => {
       const value = formData.get(key);
       return value === "" || value === null ? undefined : value;
     };
-    
+
     const saveFile = async (file, filenamePrefix) => {
       if (!file || typeof file.arrayBuffer !== "function") return null;
 
@@ -137,10 +154,20 @@ export const putHomePage = async (req) => {
     const imagePath1 = await saveFile(ImageFile1, "image_1");
     const imagePath2 = await saveFile(ImageFile2, "image_2");
 
+    let parentSectionId;
+    try {
+      parentSectionId = parseParentSectionId(getText("m_id"));
+    } catch (err) {
+      return NextResponse.json(
+        { success: false, message: err.message },
+        { status: 400 }
+      );
+    }
 
     const updateData = {
-       m_id: Number(getText("m_id") || 0),
+      // m_id: Number(getText("m_id") || 0),
       section_name: getText("section_name"),
+      m_id: parentSectionId,
       heading_1: getText("heading_1"),
       heading_2: getText("heading_2"),
       heading_3: getText("heading_3"),
@@ -179,8 +206,6 @@ export const putHomePage = async (req) => {
     );
   }
 };
-
-
 
 export const deleteHomePage = async (req) => {
   try {

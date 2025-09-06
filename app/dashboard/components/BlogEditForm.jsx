@@ -59,8 +59,26 @@ const BlogEditForm = () => {
     }
   }, [selectedBanner]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
+   const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "blog_name") {
+      setFormData({
+        ...formData,
+        blog_name: value,
+        page_url: value.toLowerCase().replace(/\s+/g, "_"),
+        seo_title: value,
+        seo_description: value,
+        seo_keywords: value,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
   const handleFileChange = (e) => {
     const { name, files } = e.target;

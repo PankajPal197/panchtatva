@@ -14,7 +14,7 @@ const BlogCard = () => {
    useEffect(() => {
       dispatch(fetchBlog());
     }, [dispatch]);
-const teamMembers = blogs.filter((blog) => blog.status === "active" && blog.sort_order === 1);
+const teamMembers = blogs.filter((blog) => blog.status === "active" && blog.sort_order === 1 && blog.delete_status==="active");
   if (loading || !teamMembers) return <div>Loading...</div>;
 
   return (

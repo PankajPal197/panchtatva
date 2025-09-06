@@ -1,0 +1,21 @@
+.contact-add .card {
+    background: var(--base-color);
+    color: var(--white-color);
+}
+.contact-add .card:hover {
+    background: var(--secondary-color);
+}
+.contact-add .card .icons svg{
+    color: var(--white-color);
+}
+.submit-btn {
+    border-radius: 25px;
+    background: var(--base-color);
+    border-color: var(--secondary-color);
+    width: 100%;
+    padding: 1rem 2rem;
+    color: var(--white-color);
+}
+.submit-btn button:hover{
+    background: var(--secondary-color);
+}

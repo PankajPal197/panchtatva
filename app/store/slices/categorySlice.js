@@ -29,16 +29,35 @@ export const updateHomeCategory = createAsyncThunk(
     try {
       const formData = new FormData();
       formData.append("id", updatedData.id);
-      formData.append("heading_1", updatedData.heading_1 || "");
-      formData.append("heading_2", updatedData.heading_2 || "");
-      formData.append("heading_3", updatedData.heading_3 || "");
+      formData.append("category_name", updatedData.category_name || "");
+      formData.append("parent_category_id", updatedData.parent_category_id || "");
+      formData.append("page_url", updatedData.page_url || "");
+      formData.append("extra_heading_1", updatedData.extra_heading_1 || "");
+      formData.append("extra_heading_2", updatedData.extra_heading_2 || "");
+      formData.append("extra_heading_3", updatedData.extra_heading_3 || "");
+      formData.append("seo_title", updatedData.seo_title || "");
+      formData.append("seo_description", updatedData.seo_description || "");
+      formData.append("seo_keywords", updatedData.seo_keywords || "");
+      formData.append("short_content_1", updatedData.short_content_1 || "");
+      formData.append("short_content_2", updatedData.short_content_2 || "");
+      formData.append("long_content_1", updatedData.long_content_1 || "");
+      formData.append("long_content_2", updatedData.long_content_2 || "");
       formData.append("sort_order", updatedData.sort_order || 1);
       formData.append("status", updatedData.status || "active");
       formData.append("delete_status", updatedData.delete_status || "active");
       formData.append("delete_by", updatedData.delete_by || 1);
       // ✅ File (if available)
-      if (updatedData.image_name instanceof File) {
-        formData.append("image_name", updatedData.image_name);
+      if (updatedData.image_name_1 instanceof File) {
+        formData.append("image_name_1", updatedData.image_name_1);
+      }
+       if (updatedData.image_name_2 instanceof File) {
+        formData.append("image_name_2", updatedData.image_name_2);
+      }
+       if (updatedData.image_name_3 instanceof File) {
+        formData.append("image_name_3", updatedData.image_name_3);
+      }
+       if (updatedData.image_name_4 instanceof File) {
+        formData.append("image_name_4", updatedData.image_name_4);
       }
       const res = await axios.put(`/api/category`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -158,6 +177,7 @@ const categorySlice = createSlice({
       .addCase(updateStatus.fulfilled, (state, action) => {
         state.updateStatus = "succeeded";
       })
+
       .addCase(updateStatus.pending, (state) => {
         state.updateStatus = "loading";
       })

@@ -1,0 +1,47 @@
+a{
+    text-decoration: none;
+}
+.my-account-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+}
+
+.wrap-sidebar-account ul,
+li {
+    list-style-type: none;
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.my-account-nav .my-account-nav-item {
+    display: flex;
+    width: 100%;
+    border: 1px solid #ebebeb;
+    padding: 15px 20px;
+    border-radius: 3px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    position: relative;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+}
+.my-account-nav .my-account-nav-item:hover, .my-account-nav .my-account-nav-item.active {
+    background-color: #f2f2f2;
+    color: var(--secondary-color);
+    border-color: transparent;
+}
+a:focus, a:hover {
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    text-decoration: none;
+    outline: 0;
+}
