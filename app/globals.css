@@ -176,19 +176,21 @@ a{
     border-radius: 25px;
     background: var(--secondary-color);
     border-color: var(--secondary-color);
+    width: 150px;
+    padding: 10px 15px;
 }
 
 .button .icons {
-    position: absolute;
-    left: 50%;
-    top: 75%;
+    position: relative;
+    right: 6%;
+    margin-top: 3px;
     background: white;
     color: black;
     border-radius: 50%;
 }
 
 .button button:hover {
-    width: 140px;
+    width: 180px;
     transition-duration: 0.8s;
     opacity: 0.9;
 }
@@ -321,3 +323,50 @@ a{
         text-align: justify;
     }
 }
+/* product detail page  */
+/* Thumbnails scroll hone ke liye */
+.thumbs-container {
+  max-height: 400px;       /* jitni height chahiye */
+  overflow-y: auto;        /* vertical scroll */
+  padding-right: 5px;
+}
+
+.thumb-wrapper {
+  margin-bottom: 10px;
+}
+
+.thumb-img {
+  width: 100%;
+  height: 85px;
+  object-fit: cover;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.thumb-img:hover {
+  border: 2px solid #aaa;
+}
+
+.active-thumb {
+  border: 2px solid #000;
+}
+
+/* Zoom effect */
+.zoom-container {
+  position: relative;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.zoom-image {
+  width: 100%;
+  height: auto;
+  transition: transform 0.4s ease;
+}
+
+.zoom-container:hover .zoom-image {
+  transform: scale(1.6); /* zoom effect */
+}
+

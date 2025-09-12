@@ -17,26 +17,39 @@ const NewProducts = () => {
   }, [dispatch]);
 
   const products = productData
-    ?.filter(
-      (prod) => prod.status === "active" && prod.delete_status === "active"
-    )
-    ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    ?.map((prod) => {
-      const category = categoryData.find(
-        (cat) => String(cat._id) === String(prod.category_id)
-      );
-      const images = [
-        prod.image_name_1,
-        prod.image_name_2,
-        prod.image_name_3,
-        prod.image_name_4,
-      ];
-      return {
-        ...prod,
-        categoryName: category ? category.category_name : "No Category",
-        images,
-      };
-    });
+  ?.filter((prod) => {
+    if (prod.status !== "active" || prod.delete_status !== "active") return false;
+    const category = categoryData.find(
+      (cat) => String(cat._id) === String(prod.category_id)
+    );
+    if (!category) return false;
+    const parentCategory = categoryData.find(
+      (cat) => String(cat._id) === String(category.parent_category_id)
+    );
+    return !!parentCategory;
+  })
+  ?.map((prod) => {
+    const category = categoryData.find(
+      (cat) => String(cat._id) === String(prod.category_id)
+    );
+    const parentCategory = categoryData.find(
+      (cat) => String(cat._id) === String(category.parent_category_id)
+    );
+    const images = [
+      prod.image_name_1,
+      prod.image_name_2,
+      prod.image_name_3,
+      prod.image_name_4,
+    ];
+    return {
+      ...prod,
+      categoryName: category.category_name,
+      categoryUrl: category.page_url,
+      parentCategoryUrl: parentCategory.page_url,
+      images,
+      fullUrl: `/${parentCategory.page_url}/${category.page_url}/${prod.page_url}`,
+    };
+  });
   const settings = {
     dots: false,
     infinite: true,
@@ -77,21 +90,19 @@ const NewProducts = () => {
       <Slider {...settings}>
         {products.map((item) => (
           <div key={item.id}>
-            <Link href={`${item.page_url}`} className="no-underline">
-            <div className="h-34 w-34  mb-2 transition-all duration-300">
-              <div className="image overflow-hidden rounded-full">
-                <img
-                  src={item.image_name_1}
-                  alt={item.product_name}
-                  className="rounded-full w-32 h-32 object-cover transform hover:scale-110 transition-all duration-300"
-                />
+            <Link href={item.fullUrl} className="no-underline">
+              <div className="h-34 w-34  mb-2 transition-all duration-300">
+                <div className="image overflow-hidden rounded-full">
+                  <img
+                    src={item.image_name_1}
+                    alt={item.product_name}
+                    className="rounded-full w-32 h-32 object-cover transform hover:scale-110 transition-all duration-300"
+                  />
+                </div>
+                <div className="product-name mt-2 ml-6 font-semibold text-lg text-black">
+                  {item.product_name}
+                </div>
               </div>
-              <div className="product-name mt-2 ml-6 font-semibold text-lg text-black"
-              
-              >
-                {item.product_name}
-              </div>
-            </div>
             </Link>
           </div>
         ))}

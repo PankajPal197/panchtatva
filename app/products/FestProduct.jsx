@@ -2,6 +2,7 @@
 import React from 'react'
 import Button from '../components/Button'
 import { motion } from "framer-motion";
+import Link from 'next/link';
 const FestProduct = ({cards}) => {
   return (
     <div className="p-tb-60">
@@ -14,6 +15,7 @@ const FestProduct = ({cards}) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: index * 0.2 }}
         >
+          <Link href={item.fullUrl}>
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -37,6 +39,7 @@ const FestProduct = ({cards}) => {
               <Button />
             </div>
           </motion.div>
+          </Link>
         </motion.div>
       ))}
     </div>

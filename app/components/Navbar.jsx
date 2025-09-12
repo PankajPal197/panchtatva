@@ -69,7 +69,7 @@ const Navbar = () => {
                   onMouseEnter={() => setOpenDropDown(index)}
                   onMouseLeave={() => setOpenDropDown(null)}
                 >
-                  <Link href={item.page_url}>{item.category_name}</Link>
+                  <Link href={`../${item.page_url}`}>{item.category_name}</Link>
                   <div className="pl-1 pt-1 text-white">
                     {item.submenu.length > 0 &&
                       (openDropdown === index ? (

@@ -25,9 +25,9 @@ const page = () => {
   // if (loading) return <div className="p-10 text-blue-500">Loading...</div>;
 
   const catData = category.find((cat) => cat.page_url === innerCatUrl);
-const parentCategoryData = category.find(
-  (cat) => String(cat._id) === String(catData?.parent_category_id)
-);
+  const parentCategoryData = category.find(
+    (cat) => String(cat._id) === String(catData?.parent_category_id)
+  );
 
   if (!catData) {
     return <div className="p-10 text-red-600">Category not found</div>;
@@ -36,19 +36,18 @@ const parentCategoryData = category.find(
     (prod) => String(prod.category_id) === String(catData._id)
   );
 
-const allImagesForCategories = [];
+  const allImagesForCategories = [];
 
-brand.forEach((b) => {
-  const imagesForCategory = image.filter(
-    (img) => String(img.product_id) === String(b.product_id)
-  );
-  allImagesForCategories.push({
-    product: b,
-    images: imagesForCategory,
+  brand.forEach((b) => {
+    const imagesForCategory = image.filter(
+      (img) => String(img.product_id) === String(b.product_id)
+    );
+    allImagesForCategories.push({
+      product: b,
+      images: imagesForCategory,
+    });
   });
-});
 
-console.log(parentCategoryData);
   return (
     <Layout>
       <Breadcumbs
@@ -134,15 +133,18 @@ console.log(parentCategoryData);
                   <div className="p-10 text-red-600">Category not found</div>
                 ) : (
                   brand.map((item) => (
-                    
                     <div className="col-md-4 mt-3" key={item.id}>
                       <div className="card p-3">
-                        <Link href={`/${parentCategoryData.page_url}/${catData.page_url}/${item.page_url}`}>
+                        <Link
+                          href={`/${parentCategoryData.page_url}/${catData.page_url}/${item.page_url}`}
+                        >
                           <span className="text-xs text-gray-500">
                             {item.brand}
                           </span>
 
-                          <h3 className="text-lg font-bold">{item.product_name}</h3>
+                          <h3 className="text-lg font-bold">
+                            {item.product_name}
+                          </h3>
 
                           <ul className="flex items-center">
                             {[...Array(item.rating)].map((_, i) => (
@@ -153,16 +155,16 @@ console.log(parentCategoryData);
                           </ul>
 
                           <div className="image mt-2">
-                              <Image
+                            <Image
                               //  key={img._id}
-                                src={item.image_name_1}
-                                alt={item.image_title}
-                                className="w-full h-60 object-cover rounded-lg"
-                                width={0}
-                                height={0}
-                                sizes="100vw"
-                                style={{ width: "100%", height: "auto" }}
-                              />
+                              src={item.image_name_1}
+                              alt={item.image_title}
+                              className="w-full h-60 object-cover rounded-lg"
+                              width={0}
+                              height={0}
+                              sizes="100vw"
+                              style={{ width: "100%", height: "auto" }}
+                            />
                           </div>
                         </Link>
                       </div>

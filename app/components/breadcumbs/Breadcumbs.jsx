@@ -17,7 +17,7 @@ const Breadcumbs = ({ title, subCategory, pageUrl }) => {
             </li>
             {subCategory && (
               <li className="m-3">
-                <Link href="/subcategory">{subCategory}</Link>
+                <Link href={`../${subCategory}`}>{subCategory}</Link>
               </li>
             )}
             <li>{pageUrl}</li>

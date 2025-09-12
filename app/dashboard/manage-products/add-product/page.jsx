@@ -58,7 +58,6 @@ const page = () => {
         router.push(
           `/dashboard/manage-products/edit-product/${result.productData._id}`
         );
-        Swal.fire("Error!", "Something went wrong", "error");
       }
     } catch (err) {
       console.error(err);

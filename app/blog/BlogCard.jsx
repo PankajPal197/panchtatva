@@ -32,7 +32,7 @@ const teamMembers = blogs.filter((blog) => blog.status === "active" && blog.sort
                   <img
                     src={member.blog_image_1}
                     alt={member.blog_name}
-                    className="w-full h-48 object-cover rounded-xl shadow-2xl transform group-hover:scale-110 transition-all duration-500"
+                    className="w-full rounded-xl shadow-2xl transform group-hover:scale-110 transition-all duration-500"
                   />
                 </div>
                 <div className="mt-4">
@@ -47,7 +47,6 @@ const teamMembers = blogs.filter((blog) => blog.status === "active" && blog.sort
                     <FaRegUserCircle /> {member.blog_author}
                   </div>
                   <div className="flex items-center gap-1">
-                    {/* <SlCalender /> <MemberDate date={member.date} /> */}
                     <SlCalender /> {dateFormat(member.blog_date)}
                   </div>
                 </div>

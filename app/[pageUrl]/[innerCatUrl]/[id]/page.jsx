@@ -1,14 +1,17 @@
 "use client";
 import Breadcumbs from "@/app/components/breadcumbs/Breadcumbs";
 import Layout from "@/app/components/Layout";
+import DetailSlider from "@/app/products/DetailSlider";
 import NewProducts from "@/app/products/NewProducts";
+import { fetchProduct } from "@/app/store/slices/productSlice";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { use, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import React, { use, useEffect, useState } from "react";
 import { CiStar } from "react-icons/ci";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { FaShareAlt } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 
 export const brand = [
   {
@@ -22,7 +25,7 @@ export const brand = [
       { name: "Red", code: "red", price: 100 },
     ],
     rating: 5,
-    stock:50,
+    stock: 50,
     price: 1999,
     status: "active",
     description: "A natural cleanser with mukhi essence.",
@@ -76,77 +79,61 @@ export const brand = [
   },
 ];
 
-const Page = ({ params }) => {
-  const { page_url, catregoryUrl } = use(params);
+const Page = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const { data: productDetail, loading } = useSelector(
+    (state) => state.product
+  );
+  useEffect(() => {
+    dispatch(fetchProduct());
+  }, [dispatch]);
 
-const product = brand.find(
-  (item) => item.page_url === page_url && item.catregoryUrl === catregoryUrl
-);
+  const product = productDetail.find((prod) => prod.page_url === id);
 
-const [quantity, setQuantity] = useState(1);
-const [activeTab, setActiveTab] = useState("desc");
-const [selectedColor, setSelectedColor] = useState(
-  product?.colors?.[0] || null // safe optional chaining
-);
-const router = useRouter();
-
-if (!product) {
-  return <div className="p-10 text-red-600">Product not found.</div>;
-}
-
+  const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState("desc");
+  // const [selectedColor, setSelectedColor] = useState(
+  //   product?.color?.[0] || null
+  // );
+  const router = useRouter();
+  if (!product) {
+    return <div className="p-10 text-red-600">Product not found.</div>;
+  }
   const handleAddToCart = () => {
     router.push("/cart");
   };
-  const handleQuantityChange = (type) => {
+  const handleQuantityChange   = (type) => {
     setQuantity((prev) => {
       if (type === "inc") return prev + 1;
       if (type === "dec" && prev > 1) return prev - 1;
       return prev;
     });
   };
-  // const totalPrice = product.price * quantity;
+  const totalPrice = product.price * quantity;
   // const totalPrice = (product.price + selectedColor.price) * quantity;
   return (
     <Layout>
-      <Breadcumbs
-        title={product.name}
-        pageUrl={`${page_url} >> ${catregoryUrl}`}
-      />
+      <Breadcumbs title={product.product_name} pageUrl={product.page_url} />
       <section className="mt-3">
         <div className="p-tb-60">
           <div className="row">
             <div className="col-md-6">
-              <div className="row">
-                <div className="col-md-2">
-                  <div className="images">
-                    <Image src={product.image} width={100} height={100} className="mt-2" style={{height:"85px", width:"100%"}} />
-                    <Image src={product.image} width={100} height={100} className="mt-2" style={{height:"85px", width:"100%"}} />
-                    <Image src={product.image} width={100} height={100} className="mt-2" style={{height:"85px", width:"100%"}} />
-                    <Image src={product.image} width={100} height={100} className="mt-2" style={{height:"85px", width:"100%"}} />
-                  </div>
-                </div>
-                <div className="col-md-10">
-                   <div className="card p-3 shadow rounded mb-3">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  style={{ width: "100%", height: "auto" }}
-                />
-              </div>
-                </div>
-              </div>
-             
+              <DetailSlider product={product}/>
             </div>
             <div className="col-md-6">
               <div className="title">
-                <h1>{product.name}</h1>
+                <h1>{product.product_name}</h1>
                 <hr />
                 <span>{product.brand}</span>
-                <div className="text-[#92403c] font-medium text-xl">
-                  {/* ₹ {totalPrice} */}
+                <div className="text-[#92403c] font-medium text-2xl">
+                  ₹{totalPrice - (totalPrice * product.discount) / 100}
+                  <span className="mx-3 text-xl line-through text-gray-600">
+                    ₹{totalPrice}
+                  </span>
+                  <span className="mx-3 text-xl rounded-full p-2 bg-amber-800 text-white">
+                    {product.discount}%
+                  </span>
                 </div>
                 <ul className="flex items-center mt-2">
                   {[...Array(product.rating)].map((_, i) => (
@@ -155,10 +142,17 @@ if (!product) {
                     </li>
                   ))}
                 </ul>
+                {product.extra_heading_1?.split(" ").slice(0, 5).join(" ")}
                 <hr />
                 {/* color:<strong>{product.color}</strong> */}
-                <div className="varient-color-picker flex gap-4 mt-4">
-                  {/* {product.colors.map((color, i) => (
+                color:{" "}
+                {product.color.map((c, i) => (
+                  <strong key={i} style={{ marginRight: "5px" }}>
+                    {c.name || c}
+                  </strong>
+                ))}
+                {/* <div className="varient-color-picker flex gap-4 mt-4">
+                  {product.color.map((color, i) => (
                     <label
                       key={i}
                       className={`cursor-pointer flex flex-col items-center`}
@@ -181,8 +175,8 @@ if (!product) {
                       ></span>
                       <span className="text-sm mt-1">{color.name}</span>
                     </label>
-                  ))} */}
-                </div>
+                  ))}
+                </div> */}
                 <div className="quantity flex items-center gap-2 mt-4">
                   <button
                     onClick={() => handleQuantityChange("dec")}
@@ -203,7 +197,6 @@ if (!product) {
                     +
                   </button>
                 </div>
-
                 <button
                   className="bg-[#92403c] hover:bg-[#f36c69] text-white p-2 shadow rounded mt-3 mb-3 me-3"
                   onClick={handleAddToCart}
@@ -266,18 +259,14 @@ if (!product) {
                 <h2 className="text-lg font-semibold mb-2">
                   Product Description
                 </h2>
-                <p className="text-gray-600">
-                  This is the product description.
-                </p>
+                <p>{product.long_content_1?.replace(/<[^>]*>/g, " ")}</p>
               </div>
             )}
 
             {activeTab === "additional-info" && (
               <div id="additional-info">
                 <h2 className="text-lg font-semibold mb-2">Additional Info</h2>
-                <p className="text-gray-600">
-                  This is where additional product specifications go.
-                </p>
+                <p>{product.long_content_2?.replace(/<[^>]*>/g, " ")}</p>
               </div>
             )}
           </div>

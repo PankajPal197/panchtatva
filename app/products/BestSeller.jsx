@@ -62,10 +62,17 @@ const BestSeller = ({ products }) => {
               </div>
 
               <div className="prod-detail w-1/2 pl-4">
-                <span className="text-dark font-bold">{product.categoryName}</span>
-                <h3 className="text-lg font-semibold">
-                  {product.product_name}
-                </h3>
+                <span className="text-dark font-bold">
+                  <Link href={product.fullUrl} className="text-dark">
+                    {" "}
+                    {product.categoryName}
+                  </Link>
+                </span>
+                <Link href={product.fullUrl} className="text-dark">
+                  <h3 className="text-lg font-semibold">
+                    {product.product_name}
+                  </h3>
+                </Link>
                 <p className="desc text-gray-600">
                   {product.extra_heading_1?.split(" ").slice(0, 5).join(" ")}
                 </p>
@@ -83,13 +90,12 @@ const BestSeller = ({ products }) => {
                     </li>
                   ))}
                 </ul>
-
                 <div className="mt-2">
                   <span className="text-green-600 font-bold">
-                    ₹{product.price}
+                    ₹{product.price - (product.price * product.discount) / 100}
                   </span>{" "}
                   <span className="text-gray-400 line-through">
-                    ₹{product.price + (product.price * product.discount) / 100}
+                    ₹{product.price}
                   </span>
                 </div>
 
@@ -104,11 +110,18 @@ const BestSeller = ({ products }) => {
                     ></div>
                   </div>
                 </div>
+                <div className="desc">
+                  {product.product_name}
+                </div>
 
                 <div className="mt-4 flex items-center space-x-4 text-gray-600 text-lg">
-                  <Link href="./wishlist" className="text-gray-400"><FaRegHeart className="cursor-pointer hover:text-red-500" /></Link>
+                  <Link href="./wishlist" className="text-gray-400">
+                    <FaRegHeart className="cursor-pointer hover:text-red-500" />
+                  </Link>
                   <TbRefresh className="cursor-pointer hover:text-blue-500" />
-                  <FaRegEye className="cursor-pointer hover:text-green-500" />
+                  <Link href={product.fullUrl} className="text-dark">
+                    <FaRegEye className="cursor-pointer hover:text-green-500" />
+                  </Link>
                 </div>
               </div>
             </div>

@@ -56,7 +56,7 @@ const Page = () => {
                     .map((blog) => (
                       <div key={blog} className="row d-flex align-items-center">
                         {/* Image Section */}
-                        <div className="col-md-6">
+                        <div className="col-md-4 mt-3">
                           <div className="image overflow-hidden rounded-3">
                             <Link href={`/blog/${blog.page_url}`}>
                               <Image
@@ -69,7 +69,7 @@ const Page = () => {
                                 style={{
                                   objectFit: "cover",
                                   borderRadius: "12px",
-                                  width: "100%",
+                                  width: "w-full",
                                   height: "auto",
                                 }}
                               />
@@ -78,7 +78,7 @@ const Page = () => {
                         </div>
 
                         {/* Content Section */}
-                        <div className="col-md-6 mt-3">
+                        <div className="col-md-8 mt-3">
                           <div className="content ps-md-4 mt-3 mt-md-0">
                             <Link href={`/blog/${blog.page_url}`}>
                               <h3 className=" mb-3">{blog.blog_name}</h3>

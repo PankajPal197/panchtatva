@@ -18,7 +18,6 @@ const page = () => {
   }, [dispatch]);
 
   const aboutData = about.find((a) => a.page_url === "about_us");
-  console.log(aboutData);
   if (!aboutData)
     return <div className="p-10 text-red-600">Page not found</div>;
 

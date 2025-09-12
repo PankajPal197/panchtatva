@@ -35,8 +35,8 @@ const page = () => {
   }, [dispatch]);
   const contact = categories.find(
     (cat) =>
-      cat.category_name === "Contact Us" ||
-      (cat.status === "Active" && blog.sort_order === 1)
+      cat.page_url === "contact_us" ||
+      (cat.status === "Active" && cat.sort_order === 1)
   );
 
   const handleSubmit = async (e) => {
@@ -70,7 +70,7 @@ const page = () => {
           message: "",
           enquiry_page: "",
         });
-        router.push("/contact-us");
+        router.push("/contact_us");
       } else {
         Swal.fire("Error!", "Something went wrong", "error");
       }
@@ -79,7 +79,8 @@ const page = () => {
       Swal.fire("Error!", "Something went wrong", "error");
     }
   };
-  if (loading || !contact) return <div>Loading...</div>;
+  console.log(contact)
+  // if (loading || !contact) return <div>Loading...</div>;
 
   return (
     <Layout>

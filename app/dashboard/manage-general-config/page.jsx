@@ -9,8 +9,8 @@ import ManageGeneralConfig from "../components/ManageGenralConfig";
 
 const page = () => {
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state.generalConfig);
-
+  const { data , loading, error  } = useSelector((state) => state.generalConfig);
+console.log("Redux data:", data);
   const [formData, setFormData] = useState({
     website_name: "",
     phone_no: "",
@@ -27,6 +27,7 @@ const page = () => {
     home_title: "",
     home_desc: "",
     home_keyword: "",
+    // _id: null,
   });
 
   const [images, setImages] = useState({
@@ -35,45 +36,74 @@ const page = () => {
     fav_icon_logo: null,
     apple_icon_logo: null,
   });
+const [imagePreviews, setImagePreviews] = useState({});
 
   useEffect(() => {
     dispatch(fetchGeneralConfig());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (data) {
-      setFormData((prev) => ({
-        ...prev,
-        ...data,
-      }));
-    }
-  }, [data]);
+useEffect(() => {
+  console.log("Redux data:", data);
+  if (data) {
+    setFormData({
+      website_name: data.website_name || "",
+      phone_no: data.phone_no || "",
+      whats_phone_no: data.whats_phone_no || "",
+      email_ids: data.email_ids || "",
+      google_map_url: data.google_map_url || "",
+      facebok_url: data.facebok_url || "",
+      insta_url: data.insta_url || "",
+      linkedin_url: data.linkedin_url || "",
+      twitter_url: data.twitter_url || "",
+      youtube_url: data.youtube_url || "",
+      address_1: data.address_1 || "",
+      address_2: data.address_2 || "",
+      home_title: data.home_title || "",
+      home_desc: data.home_desc || "",
+      home_keyword: data.home_keyword || "",
+      // _id: data._id || null,
+    });
+    console.log("FormData after set:", formData);
+  }
+}, [data]);
+
+
+  
+  // useEffect(() => {
+  //   if (data) {
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       ...data,
+  //     }));
+  //   }
+  // }, [data]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
-  const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    setImages({ ...images, [name]: files[0] });
-  };
+const handleFileChange = (e) => {
+  const { name, files } = e.target;
+  const file = files[0];
+  if (file) {
+    setImages({ ...images, [name]: file });
+    setImagePreviews({ ...imagePreviews, [name]: URL.createObjectURL(file) });
+  }
+};
+  // const handleFileChange = (e) => {
+  //   const { name, files } = e.target;
+  //   setImages({ ...images, [name]: files[0] });
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const form = new FormData();
-
-    // Append text fields
     for (const key in formData) {
       form.append(key, formData[key] || "");
     }
-
     for (const key in images) {
       const file = images[key];
-
       if (file) {
-        // ✅ Check if file size is more than 2MB
         if (file.size > 2 * 1024 * 1024) {
           Swal.fire({
             icon: "error",
@@ -82,55 +112,80 @@ const page = () => {
           });
           return;
         }
-
         form.append(key, file);
       }
     }
+try {
     const res = await fetch("/api/general_config", {
-      method: "POST",
+      method: "POST", // hamesha POST bhejo
       body: form,
     });
 
     const result = await res.json();
+    console.log("Result:", result);
+
     if (result.success) {
       Swal.fire("Success", result.message, "success");
     } else {
       Swal.fire("Error", result.message, "error");
     }
-  };
+  } catch (err) {
+    console.error("Fetch error:", err);
+  }
+  //   const method = formData._id ? "PUT" : "POST"; 
+  //   const url = formData._id 
+  // ? `/api/general_config/${formData._id}`
+  // : "/api/general_config";
+  // const res = await fetch(url, {
+  //   method,
+  //   body: form,
+  // });
   
+    // const res = await fetch("/api/general_config", {
+    //   method: "POST",
+    //   body: form,
+    // });
 
-   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("/api/general_config");
-      const json = await res.json();
-      if (json.success && json.data) {
-        const config = json.data;
-        setFormData((prev) => ({
-          ...prev,
-          ...config,
-        }));
+    const result = await res.json();
+     console.log("Submit result:", result);
+    if (result.success) {
+      Swal.fire("Success", result.message, "success");
+      dispatch(fetchGeneralConfig());
+    } else {
+      Swal.fire("Error", result.message, "error");
+    }
+  };
+  //  useEffect(() => {
+  //   const fetchData = async () => {
+  //     const res = await fetch("/api/general_config");
+  //     const json = await res.json();
+  //     if (json.success && json.data) {
+  //       const config = json.data;
+  //       setFormData((prev) => ({
+  //         ...prev,
+  //         ...config,
+  //       }));
 
-        // Set preview for existing images
-        ["header_logo", "footer_logo", "fav_icon_logo", "apple_icon_logo"].forEach((key) => {
-          if (config[key]) {
-            setImagePreviews((prev) => ({
-              ...prev,
-              [key]: `/general_config/${config[key]}`,
-            }));
-          }
-        });
-      }
-    };
-    fetchData();
-  }, []);
+  //       // Set preview for existing images
+  //       ["header_logo", "footer_logo", "fav_icon_logo", "apple_icon_logo"].forEach((key) => {
+  //         if (config[key]) {
+  //           setImagePreviews((prev) => ({
+  //             ...prev,
+  //             [key]: `/general_config/${config[key]}`,
+  //           }));
+  //         }
+  //       });
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
+ 
+console.log(data)
 
   return (
     <>
       <Layout>
-
-
         {/* <ManageGeneralConfig /> */}
        <section className="p-3">
           <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -166,8 +221,10 @@ const page = () => {
                         type="text"
                         className="form-control"
                         name="website_name"
-                        value={formData.website_name}
-                        onChange={handleInputChange}
+                        value={formData.website_name ?? ""}   // null/undefined बचाने के लिए
+  onChange={handleInputChange}
+                        // value={formData.website_name || ""}
+                        // onChange={handleInputChange}
                       />
                     </div>
                   </div>
